@@ -12,18 +12,6 @@ The game of life is a cellular automation devised by the British mathematician J
 
 ## DESIGN
 
-![Image of Design](https://github.com/ummarikram/GameOfLife/blob/main/John%20Conway%E2%80%99s%20Game%20of%20Life%20Design.png)
-
 ## FUNCTIONALITIES
 
 ## CONTRIBUTORS
-
-[NAWAL ALI](https://github.com/mnawalali4)
-
-[JUNAID AFZAL](https://github.com/MuhammadJunaidAfzal)
-
-[UMAR FAROOQ](https://github.com/Um827)
-
-[HUMA KARIM](https://github.com/humakarim44)
-
-[ABDUL MANNAN](https://github.com/Abdulmannan111)

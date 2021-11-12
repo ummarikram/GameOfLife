@@ -1,15 +1,61 @@
 package FileHandling;
+
+import java.util.Scanner;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.io.IOException;
 import Grid.Grid;
 public class FileHandling {
     
-    public void WriteFile(String FileName,Grid grid)
+    public void viewStates (String FileName) // show all file names
     {
-        File myfile =new File(FileName);
+        File myFile = new File(FileName);
+        try 
+        {
+            Scanner sc = new Scanner(myFile);
+
+            while(sc.hasNextLine())
+            {
+                String line = sc.nextLine();
+                System.out.println(line);
+            }
+            sc.close();
+        } 
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public Grid loadstate (String FileName) // ReadFile
+    {
+        int row = 0;
+        int column = 0;
+      
+        Scanner input = new Scanner(FileName); 
+    
+        row  = Integer.parseInt(input.next());     
+        column  = Integer.parseInt(input.next());
+       
+        Grid temp = new Grid(row, column);
+
+        while (input.hasNext()) 
+        {
+            row  = Integer.parseInt(input.next());
+         
+            column  = Integer.parseInt(input.next());
+            
+            temp.setCellState(row, column, true); // store in grid only alive cells
+          
+        }
+        input.close();
+
+        return temp;
+
+    }
+    public void saveState(String FileName,Grid grid)   // WriteFile
+    {
+        File myfile = new File(FileName);
         try
         {
             myfile.createNewFile();
@@ -22,19 +68,22 @@ public class FileHandling {
         try
         {
 
-        FileWriter fileWriter =new FileWriter(FileName);
-        for(int i=0;i<grid.getRows();i++)
-        {
-            for(int j=0;j<grid.getColumns();j++)
+            FileWriter fileWriter = new FileWriter(FileName);
+
+            fileWriter.write(grid.getRows() + " " + grid.getColumns() + "\n"); // write gide row and column size
+
+            for ( int i = 0 ; i < grid.getRows() ; i++)
             {
-               if(grid.getCellState(i, j)==true)
-               {
-                fileWriter.write(i+" "+j+" "+1+"\n");
-               }
+                for ( int j = 0 ; j < grid.getColumns() ; j++ )
+                {
+                    if ( grid.getCellState(i, j) == true)
+                    {
+                        fileWriter.write(i + " " + j + "\n" );
+                    }
+                }
             }
-        }
       
-        fileWriter.close();
+            fileWriter.close();
         }
         catch(IOException e)
         {
@@ -42,9 +91,19 @@ public class FileHandling {
         }
 
     }
-    public Grid ReadFile(String FileName)
+    public void deletefile(String Filename)
     {
 
+        File myFile = new File(Filename);
+
+        if ( myFile.delete() )
+        {
+            System.out.println("I have deleted: " + myFile.getName());
+        }
+        else
+        {
+            System.out.println("Some problem occurred while deleting the file..!");
+        }
 
     }
 

@@ -4,7 +4,7 @@ public class StateHandler {
     
     private boolean m_Running;
  // private DatabaseHandler m_DatabaseHandler;
- // private FileHandler m_FileHandler;
+    private FileHandler m_FileHandler;
     private int m_counter;
 
     public StateHandler()

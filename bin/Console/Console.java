@@ -3,7 +3,7 @@ package Console;
 import UserInterface.*;
 import Grid.Grid;
 
-public class Console extends UserInterface {
+public class Console implements UserInterface {
     
     public void Display(Grid grid)
     {

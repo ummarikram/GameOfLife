@@ -1,4 +1,4 @@
-package FileHandling;
+package FileHandler;
 
 import java.util.Scanner;
 import java.io.File;
@@ -6,10 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import Grid.Grid;
-public class FileHandling {
+import STORAGE_INTERFACE.STORAGE_INTERFACE;
+
+public class FileHandler implements STORAGE_INTERFACE{
     
-    public void viewStates (String FileName) // show all file names
+    public void viewStates () // show all file names
     {
+        String FileName = "States.txt";
+
         File myFile = new File(FileName);
         try 
         {
@@ -27,8 +31,13 @@ public class FileHandling {
             e.printStackTrace();
         }
     }
-    public Grid loadstate (String FileName) // ReadFile
+    public Grid loadState () // ReadFile
     {
+        Scanner Input = new Scanner(System.in);
+        System.out.println("Enter FileName: ");
+
+        String FileName = Input.nextLine();
+
         int row = 0;
         int column = 0;
       
@@ -53,8 +62,13 @@ public class FileHandling {
         return temp;
 
     }
-    public void saveState(String FileName,Grid grid)   // WriteFile
+    public void saveState(Grid grid)   // WriteFile
     {
+        Scanner Input = new Scanner(System.in);
+        System.out.println("Enter FileName: ");
+
+        String FileName = Input.nextLine();
+
         File myfile = new File(FileName);
         try
         {
@@ -91,10 +105,14 @@ public class FileHandling {
         }
 
     }
-    public void deletefile(String Filename)
+    public void deleteState()
     {
+        Scanner Input = new Scanner(System.in);
+        System.out.println("Enter FileName: ");
 
-        File myFile = new File(Filename);
+        String FileName = Input.nextLine();
+
+        File myFile = new File(FileName);
 
         if ( myFile.delete() )
         {
@@ -106,6 +124,5 @@ public class FileHandling {
         }
 
     }
-
 
 }

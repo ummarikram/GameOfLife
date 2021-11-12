@@ -1,7 +1,7 @@
 package UserInterface;
 import Grid.Grid;
 
-public abstract class UserInterface {
+public interface UserInterface {
 
     // protected EventHandler m_EventHandler; 
 

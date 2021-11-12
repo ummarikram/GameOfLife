@@ -13,8 +13,17 @@ public class Grid {
     {
         this.m_Rows=Rows;
         this.m_Columns=Coloumns;
-        m_Cells = new Cell[m_Rows][m_Columns];
         m_GridHandler = new GridHandler();
+        m_Cells = new Cell[m_Rows][m_Columns];
+
+        for (int i = 0; i < m_Rows; i++)
+        {
+            for (int j = 0; j < m_Columns; j++)
+            {
+                m_Cells[i][j] = new Cell();
+            }
+        }
+        
     }
 
     public void setCellState(int row, int col, boolean value)

@@ -33,33 +33,50 @@ public class FileHandler implements STORAGE_INTERFACE{
     }
     public Grid loadState () // ReadFile
     {
-        Scanner Input = new Scanner(System.in);
         System.out.println("Enter FileName: ");
 
+        Scanner Input = new Scanner(System.in);
         String FileName = Input.nextLine();
 
-        int row = 0;
-        int column = 0;
+        System.out.println(FileName);
+
+        String row ;
+        String column ;
       
-        Scanner input = new Scanner(FileName); 
-    
-        row  = Integer.parseInt(input.next());     
-        column  = Integer.parseInt(input.next());
-       
-        Grid temp = new Grid(row, column);
-
-        while (input.hasNext()) 
+        Grid temp = new Grid();
+        File myFile = new File(FileName);
+        try 
         {
-            row  = Integer.parseInt(input.next());
+            Scanner sc = new Scanner(myFile);
          
-            column  = Integer.parseInt(input.next());
-            
-            temp.setCellState(row, column, true); // store in grid only alive cells
-          
-        }
-        input.close();
+            row  = sc.next();     
+            column  = sc.next();
 
-        return temp;
+          
+            temp.setRowColumn(Integer.parseInt(row), Integer.parseInt(column));
+
+            System.out.println(row + "  " + column + "\n");
+            
+            while(sc.hasNextLine())
+            {
+                row  = sc.next();
+         
+                column  = sc.next();
+                
+                temp.setCellState(Integer.parseInt(row),  Integer.parseInt(column), true); // store in grid only alive cells
+  
+                System.out.println(row + "  " + column + "\n");
+            }
+            sc.close();
+
+        } 
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+
+     return temp;
 
     }
     public void saveState(Grid grid)   // WriteFile

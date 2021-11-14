@@ -5,6 +5,7 @@ import Grid.Grid;
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
+import StateHandler.StateHandler;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,7 +54,7 @@ public class Graphical extends JFrame implements UserInterface, ActionListener {
 
     
 
-    public void Display(Grid grid) {
+    public void Display(Grid grid, StateHandler stateHandler ) {
 
     }
 

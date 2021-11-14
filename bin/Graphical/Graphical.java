@@ -53,16 +53,16 @@ public class Graphical extends JFrame implements UserInterface, ActionListener {
             {
                 for (int j = 0; j < BoardY/CellSize; j++)
                 {
-                    if (MouseX >= Spacing+i*CellSize && MouseX <  Spacing+i*CellSize + CellSize-2*Spacing
-                        && MouseY >= Spacing+j*CellSize && MouseY < Spacing+j*CellSize + CellSize-2*Spacing)
-                    {
-                            g.setColor(Color.YELLOW);
-                    }
-                    else
-                    {
-                            g.setColor(Color.GRAY);
-                    }
+                    g.setColor(Color.GRAY);
 
+                    if(MouseX>=Spacing + i * CellSize
+                            && MouseX<Spacing + i * CellSize + CellSize - 2 * Spacing
+                            && MouseY>=Spacing + j * CellSize
+                            && MouseY<Spacing + j * CellSize + CellSize - 2 * Spacing
+                    ){
+                        g.setColor(Color.yellow);
+                    }
+                    
                     g.fillRect(Spacing+i*CellSize, Spacing+j*CellSize, CellSize-2*Spacing, CellSize-2*Spacing);
                 }
             }
@@ -114,8 +114,8 @@ public class Graphical extends JFrame implements UserInterface, ActionListener {
         @Override
         public void mouseMoved(MouseEvent e) {
             // TODO Auto-generated method stub
-            MouseX = e.getX();
-            MouseY = e.getY();
+            MouseX = e.getX() - 8;
+            MouseY = e.getY() - 30;
 
             System.out.println("X : " + MouseX + " Y : " + MouseY);
             

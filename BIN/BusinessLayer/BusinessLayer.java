@@ -14,6 +14,11 @@ public class BusinessLayer
       m_StateHandler = new StateHandler();
    }
 
+   public Grid getGrid()
+   {
+      return m_Grid;
+   }
+
    public void Start() 
    {
       m_StateHandler.setRunning(true);

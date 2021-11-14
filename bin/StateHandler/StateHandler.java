@@ -1,4 +1,5 @@
 package StateHandler;
+import FileHandler.FileHandler;
 
 public class StateHandler {
     
@@ -11,7 +12,7 @@ public class StateHandler {
     {
         m_Running = false;
         // m_DatabaseHandler = 
-        // m_FileHandler =
+        m_FileHandler = new FileHandler();
         m_counter = 0;
     }
     //  public void setDataBaseHandler(DataBaseHandler DBHandler)

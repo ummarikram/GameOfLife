@@ -33,10 +33,8 @@ public class FileHandler implements STORAGE_INTERFACE{
     }
     public Grid loadState () // ReadFile
     {
-        System.out.println("Enter FileName: ");
-
         Scanner Input = new Scanner(System.in);
-        String FileName = Input.nextLine();
+        String FileName = "test.txt";
 
         System.out.println(FileName);
 
@@ -53,7 +51,7 @@ public class FileHandler implements STORAGE_INTERFACE{
             column  = sc.next();
 
           
-            temp.setRowColumn(Integer.parseInt(row), Integer.parseInt(column));
+            temp.ChangeDimensions(Integer.parseInt(row), Integer.parseInt(column));
 
             System.out.println(row + "  " + column + "\n");
             

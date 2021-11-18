@@ -1,33 +1,12 @@
 package GridHandler;
 
-public class GridHandler {
+public interface GridHandler {
 
-    private int m_Speed;
-    private int m_ZoomFactor;
+    public void setSpeedcontrol(int Speed);
 
+    public int getSpeedcontrol();
 
-    public GridHandler()
-    {
-        m_Speed = m_ZoomFactor = 0;
-    }
+    public void setZoomFactor(int ZoomFactor);
 
-    public void setSpeedcontrol(int Speed)
-    {
-        m_Speed = Speed;
-    }
-
-    public int getSpeedcontrol()
-    {
-        return m_Speed;
-    }
-
-    public void setZoomFactor(int ZoomFactor)
-    {
-        m_ZoomFactor = ZoomFactor;
-    }
-
-    public int getZoomFactor()
-    {
-        return m_ZoomFactor;
-    }
+    public int getZoomFactor();
 }

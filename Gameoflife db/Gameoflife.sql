@@ -71,9 +71,9 @@ as
 begin
 	if exists
 	(
-	select *
+	select [Grid].GridName
 	from Grid
-	where [Grid].GridName=@GridName 
+	order by [Grid].GridName
 	)
 		begin
 			select *

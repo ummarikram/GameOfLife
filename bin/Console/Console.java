@@ -1,11 +1,17 @@
 package Console;
 
-import UserInterface.*;
-import Grid.Grid;
 import StateHandler.StateHandler;
+import UserInterface.*;
 
-public class Console implements UserInterface {
-    public static void cls()
+public class Console extends UserInterface {
+
+    
+    public Console(StateHandler stateHandler)
+    {
+      m_stateHandler = stateHandler; 
+    }
+
+    private static void cls()
     {
 	    try
 	    {	
@@ -16,45 +22,34 @@ public class Console implements UserInterface {
 			System.out.println(E);
 	    }
     }
-    public void Display(Grid grid,StateHandler stateHandler )
+    
+    @Override
+    public void Display()
     {
-        stateHandler.setRunning(true);
-        //grid.setCellState(0, 0, true);
-       
-        grid = stateHandler.getFileHandler().loadState();
-       
-        while(stateHandler.isRunning())
-        {
+          // cls();
 
-          for (int i = 0; i < grid.getRows(); i++)
+          for (int i = 0; i < m_stateHandler.getGrid().getRows(); i++)
             {
-            for (int j = 0; j < grid.getColumns(); j++)
+            for (int j = 0; j < m_stateHandler.getGrid().getColumns(); j++)
             {
-                grid.setCellNeighbours(i, j);
+              m_stateHandler.getGrid().setCellNeighbours(i, j);
                 
-                if (grid.getCellState(i, j) == true)
+                if (m_stateHandler.getGrid().getCellState(i, j) == true)
                 {
-                    System.out.print(" * ");
+                    System.out.print(" 0 ");
                 }
                 else
                 {
-                    System.out.print(" - ");
+                    System.out.print(" . ");
                 }
             }
 
             System.out.print("\n");
          }
 
-         try{
-
-            Thread.sleep(1000);
-          }catch(InterruptedException ex){
-            //do stuff
-          }
-
-            cls();
-            stateHandler.next(grid);
-
-        }
+         System.out.print("\n");
+         System.out.print("\n");
     }
-}
+
+    
+  }

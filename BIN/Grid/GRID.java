@@ -70,7 +70,7 @@ public class Grid {
         return false;
     }
 
-    public void setCellNeighbours(int row, int col) {
+    public void calculateCellNeighbours(int row, int col) {
         if (row < m_Rows && col < m_Columns && row >= 0 && col >= 0) {
             int value = 0;
 
@@ -123,6 +123,10 @@ public class Grid {
 
             m_Cells[row][col].setNeighbours(value);
         }
+    }
+
+    public void setCellNeighbours(int row, int col, int value) {
+        m_Cells[row][col].setNeighbours(value);
     }
 
     public int getCellNeighbours(int row, int col) {

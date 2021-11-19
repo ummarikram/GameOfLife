@@ -23,7 +23,6 @@ public class Console extends UserInterface {
 	    }
     }
     
-    @Override
     public void Display()
     {
           // cls();
@@ -32,7 +31,7 @@ public class Console extends UserInterface {
             {
             for (int j = 0; j < m_stateHandler.getGrid().getColumns(); j++)
             {
-              m_stateHandler.getGrid().setCellNeighbours(i, j);
+              m_stateHandler.getGrid().calculateCellNeighbours(i, j);
                 
                 if (m_stateHandler.getGrid().getCellState(i, j) == true)
                 {

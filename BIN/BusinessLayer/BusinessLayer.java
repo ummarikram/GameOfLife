@@ -35,7 +35,7 @@ public class BusinessLayer implements StateHandler {
          for (int j =0 ; j < grid.getColumns(); j++)
          {
             m_Grid.setCellState(i, j, grid.getCellState(i, j));
-            m_Grid.setCellNeighbours(i, j);
+            m_Grid.calculateCellNeighbours(i, j);
          }
       }
    }

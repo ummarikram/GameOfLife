@@ -59,7 +59,7 @@ public class Graphical extends UserInterface implements ChangeListener {
     JLabel Generation;
     JLabel L_Zoom;
 
-    int CellSize = 40;
+    int CellSize = 30;
     int rows;
     int cols;
 
@@ -198,7 +198,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         double height = screenSize.getHeight();
 
         rows = (int) width / CellSize;
-        cols = (int) height / CellSize;
+        cols = (int) height / (CellSize/2);
 
         Frame = new JFrame();
         Generation = new JLabel();
@@ -207,7 +207,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Next = new JButton("NEXT");
         Clear = new JButton("CLEAR");
         Reset = new JButton("RESET");
-        Zoom = new JSlider(30, 50, 40);
+        Zoom = new JSlider(30, 50, 30);
         Speed = new JSlider(0, 2000, 500);
         timer = new Timer(Speed.getValue(), m_ActionListner);
 
@@ -337,7 +337,7 @@ public class Graphical extends UserInterface implements ChangeListener {
             double height = screenSize.getHeight();
 
             rows = (int) width / CellSize;
-            cols = (int) height / CellSize;
+            cols = (int) height / (CellSize/2);
 
             m_stateHandler.clearState();
 

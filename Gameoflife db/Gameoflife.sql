@@ -1,163 +1,145 @@
-use master
-create database GameOfLife
-use GameOfLife
-
-create table Grid
+create database GameOfLife;
+use  Gameoflife;
+CREATE TABLE Grid
 (
 GridName varchar(50),
 RowNO int,
 ColumnNO int,
 Alive BIT,
 primary key(GridName,RowNO,ColumnNO)
-)
+);
+DROP PROCEDURE savestate
 
-
-go
+DELIMITER $$
+use GameofLife $$
 create procedure saveState
-@GridName varchar(50),
-@RowNo int,
-@ColumnNo int,
-@Alive bit
-as 
-begin
-
+(
+IN GridNamein varchar(50),
+IN RowNoin int,
+IN ColumnNoin int,
+IN Alivein bit
+)
+BEGIN
+if exists
+(
+	select *
+	from Grid
+	where Grid.GridName=GridNamein and Grid.ColumnNO=ColumnNoin and Grid.RowNO=RowNoin
+)
+then 		
+	set @print=concat("value already exists with name ",GridNamein, " row no ", RowNoin);
+	set @print2=concat(" ColumnNo ",ColumnNoin," Alive state ",cast(Alivein as signed) );
+	select @print,@print2 ;
+else
+	insert into Grid(GridName,RowNo,ColumnNo,Alive) values(GridNamein,RowNoin,ColumnNoin,Alivein);
 	if exists
 	(
 	select *
 	from Grid
-	where [Grid].GridName=@GridName and [Grid].ColumnNO=@ColumnNo and [Grid].RowNO=@RowNo
-	)
-		begin
-			print('value already exists with name '+ @GridName + ' row no ' + cast (@RowNo as varchar) + ' ColumnNo ' + cast(@ColumnNo as varchar) + ' Alive state  '+ cast(@Alive as varchar) )
-		end;
-	else
-		begin
-		  insert into [Grid] values (@GridName,@RowNo,@ColumnNo,@Alive)
-			if exists
-			(
-			select *
-			from Grid
-			where [Grid].GridName=@GridName and [Grid].ColumnNO=@ColumnNo and [Grid].RowNO=@RowNo
-			)
-			    begin
-			       print('value inserted successfully')
-			    end;
-			 else
-				begin
-					print('Value insertion failed')
-				end;
-		
-		end;
-end;
+	where Grid.GridName=GridNamein and Grid.ColumnNO=ColumnNoin and Grid.RowNO=RowNoin
+	) then
+			set @print3=" value inserted successfully ";
+			select @print3;
+	  else 
+				set @print4=" error while insertion ";
+				select @print4;
+	  end if;
+end if;
+END $$
 
-exec saveState @GridName='New',
-@RowNo=1,
-@ColumnNo=1,
-@Alive=1
+call saveState ('New',1,1,1);
+call saveState ('New',2,1,1);
+call saveState ('Newtest',2,2,1);
 
-exec saveState @GridName='New',
-@RowNo=2,
-@ColumnNo=2,
-@Alive=1
+-- drop procedure viewState
 
-
-
-
-
-go
+DELIMITER $$
+use gameoflife $$
 create procedure viewState
-@GridName varchar(50)
-as 
+(
+IN GridNamein varchar(50)
+)
 begin
 	if exists
 	(
-	select [Grid].GridName
+	select *
 	from Grid
-	order by [Grid].GridName
+	where Grid.GridName=GridNamein 
 	)
-		begin
+		then
 			select *
 			from Grid
-			where [Grid].GridName=@GridName 
-		end;
+			where Grid.GridName=GridNamein ;
 	else
-		begin
-			print('value does not exists with name '+ @GridName )
-		end;
+			set @print=("value does not exists with name ", GridName) ;
+			select @print;
+		end if;
 end;
 
-exec viewState @GridName='New'
+call viewState('New');
 
-
-
-
-go
+DELIMITER $$
+use gameoflife $$
 create procedure loadState
-@GridName varchar(50)
-as 
+(
+IN GridNamein varchar(50)
+)
 begin
 	if exists
 	(
 	select *
 	from Grid
-	where [Grid].GridName=@GridName 
+	where Grid.GridName=GridNamein 
 	)
-		begin
+		then
 			select *
 			from Grid
-			where [Grid].GridName=@GridName 
-		end;
+			where Grid.GridName=GridNamein;
 	else
-		begin
-			print('value does not exists with name '+ @GridName )
-		end;
+		set @print=('value does not exists with name ',GridNamein );
+	end if;
 end;
 
-exec loadState @GridName='New'
+call loadState ('New');
 
 
 
 
-go
+DELIMITER $$
+use gameoflife $$
 create procedure deleteState
-@GridName varchar(50),
-@RowNo int,
-@ColumnNo int
-as 
+(
+IN GridNamein varchar(50)
+)
 begin
 
 	if exists
 	(
 	select *
 	from Grid
-	where [Grid].GridName=@GridName and [Grid].ColumnNO=@ColumnNo and [Grid].RowNO=@RowNo
+	where Grid.GridName=GridNamein 
 	)
-		begin
-			delete from [Grid] where [Grid].GridName=@GridName and [Grid].ColumnNO=@ColumnNo and [Grid].RowNO=@RowNo 
+		then
+			delete from Grid where Grid.GridName=GridNamein  ;
 			if exists
 				(
 				select *
 				from Grid
-				where [Grid].GridName=@GridName and [Grid].ColumnNO=@ColumnNo and [Grid].RowNO=@RowNo
+				where Grid.GridName=GridNamein 
 				)
-				begin
-					print('state deletion failed')
-				end;
+				then
+					set @print=('state deletion failed');
+                    select @print;
 			else
-				begin 
-					print('state deleted successfully')
-				end;
-		end;
+					set @print=('state deleted successfully');
+                    select @print;
+			end if;
 	else
-		begin
-			print('value does not exists with name '+ @GridName + ' row no ' + cast (@RowNo as varchar) + ' ColumnNo ' + cast(@ColumnNo as varchar)  )
-		end;
+		set @print=('value does not exists with name '+ GridName );
+		
+end if;
 end;
 
-exec deleteState @GridName='New',
-@RowNo=1,
-@ColumnNo=1
+call deleteState ('New');
 
-
-
-select * from [Grid]
+select * from grid

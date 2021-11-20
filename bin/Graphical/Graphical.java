@@ -207,7 +207,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Next = new JButton("NEXT");
         Clear = new JButton("CLEAR");
         Reset = new JButton("RESET");
-        Zoom = new JSlider(30, 50, 30);
+        Zoom = new JSlider(CellSize, CellSize + 10, CellSize);
         Speed = new JSlider(0, 2000, 500);
         timer = new Timer(Speed.getValue(), m_ActionListner);
 
@@ -330,6 +330,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         // TODO Auto-generated method stub
 
         if (e.getSource() == Zoom) {
+
             CellSize = Zoom.getValue();
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -16,7 +16,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         int x, y;
 
         public GridCells(int x, int y) {
-            
+
             this.setBackground(Color.lightGray);
             this.addActionListener(this);
             this.x = x;
@@ -57,6 +57,7 @@ public class Graphical extends UserInterface implements ChangeListener {
     GridCells[][] m_gridCells;
     JButton Start, Stop, Reset, Next, Clear;
     JLabel Generation;
+    JLabel L_Zoom;
 
     int CellSize = 40;
     int rows;
@@ -70,6 +71,9 @@ public class Graphical extends UserInterface implements ChangeListener {
         public void actionPerformed(ActionEvent e) {
 
             if (e.getSource() == Next) {
+
+                Clear.setVisible(false);
+                Reset.setVisible(true);
 
                 for (int i = 0; i < rows; i++) {
                     for (int j = 0; j < cols; j++) {
@@ -93,11 +97,13 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Start.setVisible(false);
                 Next.setVisible(false);
                 Clear.setVisible(false);
+                Zoom.setVisible(false);
+                L_Zoom.setVisible(false);
 
                 Stop.setVisible(true);
                 Reset.setVisible(true);
 
-                m_stateHandler.setRunning(true);
+                m_stateHandler.startState();
 
                 Thread GameLoop = new Thread(new Runnable() {
                     public void run() {
@@ -133,17 +139,19 @@ public class Graphical extends UserInterface implements ChangeListener {
 
             else if (e.getSource() == Stop) {
 
-                m_stateHandler.setRunning(false);
-
-                Start.setVisible(true);
+                m_stateHandler.stopState();
 
                 Stop.setVisible(false);
-
+                Start.setVisible(true);
                 Next.setVisible(true);
+                Zoom.setVisible(true);
+                L_Zoom.setVisible(true);
+
 
             }
 
             else if (e.getSource() == Clear) {
+
                 m_stateHandler.setGeneration(0);
 
                 for (int i = 0; i < rows; i++) {
@@ -153,11 +161,29 @@ public class Graphical extends UserInterface implements ChangeListener {
                         m_gridCells[i][j].ChangeState();
                     }
                 }
+
+                m_stateHandler.clearState();
             }
 
             else if (e.getSource() == Reset) {
-                // Reset.setVisible(false);
-                // Clear.setVisible(false);
+                
+                m_stateHandler.resetState();
+
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        m_gridCells[i][j].ChangeState();
+                    }
+                }
+
+                Generation.setText(Integer.toString(m_stateHandler.getGeneration()));
+
+                Reset.setVisible(false);
+                Stop.setVisible(false);
+                Start.setVisible(true);
+                Next.setVisible(true);
+                Clear.setVisible(true);
+                Zoom.setVisible(true);
+                L_Zoom.setVisible(true);
             }
 
         }
@@ -181,7 +207,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Next = new JButton("NEXT");
         Clear = new JButton("CLEAR");
         Reset = new JButton("RESET");
-        Zoom = new JSlider(10, 50, 40);
+        Zoom = new JSlider(30, 50, 40);
         Speed = new JSlider(0, 2000, 500);
         timer = new Timer(Speed.getValue(), m_ActionListner);
 
@@ -221,12 +247,7 @@ public class Graphical extends UserInterface implements ChangeListener {
     }
 
     public void Display() {
-        Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        Frame.setLayout(new BorderLayout());
-        Frame.setTitle("John Conway's Game of Life");
-        Frame.setResizable(false);
-
+       
         JPanel Top = new JPanel();
         JPanel Controls = new JPanel();
         JPanel GridContainer = new JPanel();
@@ -259,7 +280,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         L_Delay.setFont(new Font("Consolas", Font.PLAIN, 14));
         L_Delay.setForeground(Color.WHITE);
 
-        JLabel L_Zoom = new JLabel("ZOOM");
+        L_Zoom = new JLabel("ZOOM");
         L_Zoom.setFont(new Font("Consolas", Font.PLAIN, 14));
         L_Zoom.setForeground(Color.WHITE);
 
@@ -276,15 +297,20 @@ public class Graphical extends UserInterface implements ChangeListener {
 
         Controls.add(Generation);
 
-        Frame.setVisible(true);
-
         timer.start();
+
+        Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Frame.setLayout(new BorderLayout());
+        Frame.setTitle("John Conway's Game of Life");
+        Frame.setResizable(false);
+        Frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        Frame.setVisible(true);
 
     }
 
-
     public void INIT_GRID() {
 
+        
         m_stateHandler.getGrid().ChangeDimensions(rows, cols);
         GridPanel.setLayout(new GridLayout(rows, cols));
 
@@ -306,10 +332,22 @@ public class Graphical extends UserInterface implements ChangeListener {
         if (e.getSource() == Zoom) {
             CellSize = Zoom.getValue();
 
-            // Readjust Grid
-        }
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            double width = screenSize.getWidth();
+            double height = screenSize.getHeight();
 
+            rows = (int) width / CellSize;
+            cols = (int) height / CellSize;
+
+            m_stateHandler.clearState();
+
+            GridPanel.removeAll();
+
+            this.INIT_GRID();
+
+            GridPanel.revalidate();
+            GridPanel.repaint();
+        }
     }
 
-  
 }

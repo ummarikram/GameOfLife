@@ -9,6 +9,8 @@ public interface StateHandler {
 
    public void resetState();
 
+   public void clearState();
+
    public void nextState();
 
    public boolean isRunning();

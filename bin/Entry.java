@@ -9,28 +9,20 @@ public class Entry
     public static void main(String[] args)
     {   
 
-        BusinessLayer Logic = new BusinessLayer(10,10);
+        BusinessLayer Logic = new BusinessLayer(20,20);
         
         Graphical GUI = new Graphical(Logic);
         GUI.Display();
 
         // Console CUI = new Console(Logic);
 
-        // CUI.Display();
+        // CUI.setCellState(5, 10, true);
+        // CUI.setCellState(5, 11, true);
+        // CUI.setCellState(5, 12, true);
+        // CUI.setCellState(4, 11, true);
+        // CUI.setCellState(6, 11, true);
 
-        // Logic.getGrid().setCellState(3, 4, true);
-        // Logic.getGrid().setCellState(3, 5, true);
-        // Logic.getGrid().setCellState(3, 6, true);
-        // Logic.getGrid().setCellState(4, 4, true);
-        // Logic.getGrid().setCellState(4, 5, true);
-        // Logic.getGrid().setCellState(4, 6, true);
-
-        // CUI.Display();
-
-        // CUI.next();
-
-        // CUI.Display();
-    
+        // CUI.StartGameLoop();
     }
 }
 

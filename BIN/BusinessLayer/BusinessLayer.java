@@ -28,12 +28,15 @@ public class BusinessLayer implements StateHandler {
     }
 
     public void setGrid(Grid grid) {
-        m_Grid.ChangeDimensions(grid.getRows(), grid.getColumns());
 
-        for (int i = 0; i < grid.getRows(); i++) {
-            for (int j = 0; j < grid.getColumns(); j++) {
-                m_Grid.setCellState(i, j, grid.getCellState(i, j));
-                m_Grid.calculateCellNeighbours(i, j);
+        if (grid != null) {
+            m_Grid.ChangeDimensions(grid.getRows(), grid.getColumns());
+
+            for (int i = 0; i < grid.getRows(); i++) {
+                for (int j = 0; j < grid.getColumns(); j++) {
+                    m_Grid.setCellState(i, j, grid.getCellState(i, j));
+                    m_Grid.calculateCellNeighbours(i, j);
+                }
             }
         }
     }
@@ -75,6 +78,12 @@ public class BusinessLayer implements StateHandler {
 
     public void nextState() {
 
+        for (int i = 0; i < m_Grid.getRows(); i++) {
+            for (int j = 0; j < m_Grid.getColumns(); j++) {
+                m_Grid.calculateCellNeighbours(i, j);
+            }
+        }
+
         if (m_ResetGrid == null) {
             m_ResetGrid = new Grid(m_Grid.getRows(), m_Grid.getColumns());
 
@@ -93,6 +102,13 @@ public class BusinessLayer implements StateHandler {
         m_ResetGrid = null;
         m_isRunning = false;
         m_CurrentGeneration = 0;
+
+        for (int i = 0; i < m_Grid.getRows(); i++) {
+            for (int j = 0; j < m_Grid.getColumns(); j++) {
+                m_Grid.setCellState(i, j, false);
+                m_Grid.setCellNeighbours(i, j, 0);
+            }
+        }
     }
 
     public boolean isRunning() {
@@ -105,10 +121,6 @@ public class BusinessLayer implements StateHandler {
 
     public int getGeneration() {
         return m_CurrentGeneration;
-    }
-
-    public void setGeneration(int count) {
-        m_CurrentGeneration = count;
     }
 
     private void applyrules() {

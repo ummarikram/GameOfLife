@@ -2,11 +2,11 @@ package STORAGE_INTERFACE;
 import Grid.Grid;
 
 public interface STORAGE_INTERFACE {
-    public void viewStates();
+    public String viewStates();
 
-    public Grid loadState();
+    public Grid loadState(String name);
 
-    public void saveState(Grid grid);
+    public void saveState(Grid grid, String name);
 
-    public void deleteState();
+    public void deleteState(String name);
 }

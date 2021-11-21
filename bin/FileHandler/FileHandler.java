@@ -10,39 +10,41 @@ import STORAGE_INTERFACE.STORAGE_INTERFACE;
 
 public class FileHandler implements STORAGE_INTERFACE{
     
-    public void viewStates () // show all file names
+    public String viewStates() // show all file names
     {
         String FileName = "States.txt";
+        String StateNames = "";
 
         File myFile = new File(FileName);
+        
         try 
         {
             Scanner sc = new Scanner(myFile);
 
             while(sc.hasNextLine())
             {
-                String line = sc.nextLine();
-                System.out.println(line);
+                String State = sc.nextLine();
+                StateNames = StateNames + State + "\n";
             }
+
             sc.close();
         } 
         catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
+
+        return StateNames;
     }
-    public Grid loadState () // ReadFile
+    public Grid loadState (String StateName) // ReadFile
     {
-        Scanner Input = new Scanner(System.in);
-        String FileName = "test.txt";
-
-        System.out.println(FileName);
-
         String row ;
         String column ;
+        String FileName = StateName + ".txt";
       
-        Grid temp = new Grid();
+        Grid State = null;
         File myFile = new File(FileName);
+       
         try 
         {
             Scanner sc = new Scanner(myFile);
@@ -50,8 +52,8 @@ public class FileHandler implements STORAGE_INTERFACE{
             row  = sc.next();     
             column  = sc.next();
 
-          
-            temp.ChangeDimensions(Integer.parseInt(row), Integer.parseInt(column));
+            State = new Grid();
+            State.ChangeDimensions(Integer.parseInt(row), Integer.parseInt(column));
 
             System.out.println(row + "  " + column + "\n");
             
@@ -61,10 +63,11 @@ public class FileHandler implements STORAGE_INTERFACE{
          
                 column  = sc.next();
                 
-                temp.setCellState(Integer.parseInt(row),  Integer.parseInt(column), true); // store in grid only alive cells
+                State.setCellState(Integer.parseInt(row),  Integer.parseInt(column), true); // store in grid only alive cells
   
                 System.out.println(row + "  " + column + "\n");
             }
+
             sc.close();
 
         } 
@@ -74,21 +77,20 @@ public class FileHandler implements STORAGE_INTERFACE{
         }
 
 
-     return temp;
+        return State;
 
     }
-    public void saveState(Grid grid)   // WriteFile
+    public void saveState(Grid grid, String StateName)   // WriteFile
     {
-        Scanner Input = new Scanner(System.in);
-        System.out.println("Enter FileName: ");
-
-        String FileName = Input.nextLine();
+        String FileName = StateName + ".txt";
 
         File myfile = new File(FileName);
+        
         try
         {
             myfile.createNewFile();
         }
+        
         catch(IOException e)
         {
            System.out.println("Unable to create new File");
@@ -96,7 +98,6 @@ public class FileHandler implements STORAGE_INTERFACE{
         }
         try
         {
-
             FileWriter fileWriter = new FileWriter(FileName);
 
             fileWriter.write(grid.getRows() + " " + grid.getColumns() + "\n"); // write gide row and column size
@@ -120,12 +121,9 @@ public class FileHandler implements STORAGE_INTERFACE{
         }
 
     }
-    public void deleteState()
+    public void deleteState(String StateName)
     {
-        Scanner Input = new Scanner(System.in);
-        System.out.println("Enter FileName: ");
-
-        String FileName = Input.nextLine();
+        String FileName = StateName + ".txt";
 
         File myFile = new File(FileName);
 

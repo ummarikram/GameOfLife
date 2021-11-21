@@ -24,7 +24,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         }
 
         public void ChangeState() {
-            if (m_stateHandler.getGrid().getCellState(x, y)) {
+            if (getCellState(x, y)) {
                 this.setBackground(Color.yellow);
             } else {
                 this.setBackground(Color.lightGray);
@@ -39,11 +39,11 @@ public class Graphical extends UserInterface implements ChangeListener {
 
                     if (this.getBackground() == Color.yellow) {
                         this.setBackground(Color.lightGray);
-                        m_stateHandler.getGrid().setCellState(this.x, this.y, false);
+                        setCellState(this.x, this.y, false);
 
                     } else {
                         this.setBackground(Color.yellow);
-                        m_stateHandler.getGrid().setCellState(this.x, this.y, true);
+                        setCellState(this.x, this.y, true);
                     }
 
                 }
@@ -56,13 +56,11 @@ public class Graphical extends UserInterface implements ChangeListener {
     JPanel GridPanel;
     GridCells[][] m_gridCells;
     JButton Start, Stop, Reset, Next, Clear;
+    JButton ViewStates, LoadState, SaveState, DeleteState;
     JLabel Generation;
     JLabel L_Zoom;
 
     int CellSize = 30;
-    int rows;
-    int cols;
-
     Timer timer;
 
     ActionListener m_ActionListner = new ActionListener() {
@@ -75,21 +73,9 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Clear.setVisible(false);
                 Reset.setVisible(true);
 
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        m_stateHandler.getGrid().calculateCellNeighbours(i, j);
-                    }
-                }
+                next();
 
-                m_stateHandler.nextState();
-
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        m_gridCells[i][j].ChangeState();
-                    }
-                }
-
-                Generation.setText(Integer.toString(m_stateHandler.getGeneration()));
+                Generation.setText(Integer.toString(getGeneration()));
             }
 
             else if (e.getSource() == Start) {
@@ -103,26 +89,21 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Stop.setVisible(true);
                 Reset.setVisible(true);
 
-                m_stateHandler.startState();
+                start();
 
                 Thread GameLoop = new Thread(new Runnable() {
                     public void run() {
-                        while (m_stateHandler.isRunning()) {
-                            for (int i = 0; i < rows; i++) {
-                                for (int j = 0; j < cols; j++) {
-                                    m_stateHandler.getGrid().calculateCellNeighbours(i, j);
-                                }
-                            }
+                        while (isRunning()) {
+                        
+                            next();
 
-                            m_stateHandler.nextState();
-
-                            for (int i = 0; i < rows; i++) {
-                                for (int j = 0; j < cols; j++) {
+                            for (int i = 0; i < getRows(); i++) {
+                                for (int j = 0; j < getColumns(); j++) {
                                     m_gridCells[i][j].ChangeState();
                                 }
                             }
 
-                            Generation.setText(Integer.toString(m_stateHandler.getGeneration()));
+                            Generation.setText(Integer.toString(getGeneration()));
 
                             try {
                                 Thread.sleep(Speed.getValue());
@@ -139,43 +120,26 @@ public class Graphical extends UserInterface implements ChangeListener {
 
             else if (e.getSource() == Stop) {
 
-                m_stateHandler.stopState();
+                stop();
 
                 Stop.setVisible(false);
                 Start.setVisible(true);
                 Next.setVisible(true);
                 Zoom.setVisible(true);
                 L_Zoom.setVisible(true);
-
-
             }
 
             else if (e.getSource() == Clear) {
 
-                m_stateHandler.setGeneration(0);
+                clear();
 
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        m_stateHandler.getGrid().setCellState(i, j, false);
-                        m_stateHandler.getGrid().setCellNeighbours(i, j, 0);
-                        m_gridCells[i][j].ChangeState();
-                    }
-                }
-
-                m_stateHandler.clearState();
             }
 
             else if (e.getSource() == Reset) {
                 
-                m_stateHandler.resetState();
+                reset();
 
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        m_gridCells[i][j].ChangeState();
-                    }
-                }
-
-                Generation.setText(Integer.toString(m_stateHandler.getGeneration()));
+                Generation.setText(Integer.toString(getGeneration()));
 
                 Reset.setVisible(false);
                 Stop.setVisible(false);
@@ -186,19 +150,18 @@ public class Graphical extends UserInterface implements ChangeListener {
                 L_Zoom.setVisible(true);
             }
 
+            for (int i = 0; i < getRows(); i++) {
+                for (int j = 0; j < getColumns(); j++) {
+                    m_gridCells[i][j].ChangeState();
+                }
+            }
+
         }
     };
 
     public Graphical(StateHandler stateHandler) {
 
-        m_stateHandler = stateHandler;
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-
-        rows = (int) width / CellSize;
-        cols = (int) height / (CellSize/2);
+        setStateHandler(stateHandler);
 
         Frame = new JFrame();
         Generation = new JLabel();
@@ -207,11 +170,11 @@ public class Graphical extends UserInterface implements ChangeListener {
         Next = new JButton("NEXT");
         Clear = new JButton("CLEAR");
         Reset = new JButton("RESET");
-        Zoom = new JSlider(CellSize, CellSize + 10, CellSize);
+        Zoom = new JSlider(CellSize, CellSize + 20, CellSize);
         Speed = new JSlider(0, 2000, 500);
         timer = new Timer(Speed.getValue(), m_ActionListner);
 
-        Generation.setText(Integer.toString(m_stateHandler.getGeneration()));
+        Generation.setText(Integer.toString(getGeneration()));
         Generation.setFont(new Font("Consolas", Font.PLAIN, 20));
         Generation.setForeground(Color.WHITE);
 
@@ -308,16 +271,20 @@ public class Graphical extends UserInterface implements ChangeListener {
 
     }
 
-    public void INIT_GRID() {
+    private void INIT_GRID() {
 
-        
-        m_stateHandler.getGrid().ChangeDimensions(rows, cols);
-        GridPanel.setLayout(new GridLayout(rows, cols));
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
 
-        m_gridCells = new GridCells[rows][cols];
+        ChangeDimensions((int) width / CellSize, (int) height / (CellSize/2));
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        GridPanel.setLayout(new GridLayout(getRows(), getColumns()));
+
+        m_gridCells = new GridCells[getRows()][getColumns()];
+
+        for (int i = 0; i < getRows(); i++) {
+            for (int j = 0; j < getColumns(); j++) {
                 m_gridCells[i][j] = new GridCells(i, j);
                 GridPanel.add(m_gridCells[i][j]);
             }
@@ -327,20 +294,12 @@ public class Graphical extends UserInterface implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        // TODO Auto-generated method stub
-
+  
         if (e.getSource() == Zoom) {
 
             CellSize = Zoom.getValue();
 
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            double width = screenSize.getWidth();
-            double height = screenSize.getHeight();
-
-            rows = (int) width / CellSize;
-            cols = (int) height / (CellSize/2);
-
-            m_stateHandler.clearState();
+            clear();
 
             GridPanel.removeAll();
 

@@ -1,87 +1,104 @@
 package UserInterface;
 
+import DatabaseHandler.DatabaseHandler;
 import FileHandler.FileHandler;
-import GridHandler.GridHandler;
 import StateHandler.StateHandler;
 
-public abstract class UserInterface implements GridHandler {
-    
-    protected StateHandler m_stateHandler;
-    protected FileHandler m_fileHandler;
-    private int m_speed;
-    private int m_zoomFactor;
+public abstract class UserInterface {
 
-    // protected DatabaseHandler 
-    
-    public abstract void Display();
+  private StateHandler m_stateHandler;
+  private FileHandler m_fileHandler;
+  private DatabaseHandler m_databaseHandler;
 
-    public void viewStates()
-    {
-      m_fileHandler.viewStates();
-    }
+  public abstract void Display();
 
-    public void loadState()
-    {
-        m_stateHandler.setGrid(m_fileHandler.loadState());
-    }
+  public void ChangeDimensions(int rows, int cols) {
+    m_stateHandler.getGrid().ChangeDimensions(rows, cols);
+  }
 
-    public void saveState()
-    {
-      m_fileHandler.saveState(m_stateHandler.getGrid());
+  protected int getRows() {
+    return m_stateHandler.getGrid().getRows();
+  }
 
-    }
+  protected int getColumns() {
+    return m_stateHandler.getGrid().getColumns();
+  }
 
-    public void deleteState()
-    {
-        m_fileHandler.deleteState();
-    }
+  public void setCellState(int row, int col, boolean value) {
+    m_stateHandler.getGrid().setCellState(row, col, value);
+  }
 
+  protected boolean getCellState(int row, int col) {
+    return m_stateHandler.getGrid().getCellState(row, col);
+  }
 
-    public void start()
-    {
-      m_stateHandler.startState();
-    }
+  public String File_viewStates() {
+    return m_fileHandler.viewStates();
+  }
 
-    public void stop()
-    {
-      m_stateHandler.stopState();
-    }
- 
-    public void reset()
-    {
-      m_stateHandler.resetState();
-    }
- 
-    public void next()
-    {
-      m_stateHandler.nextState();
-    }
-    
-    protected int getGeneration()
-    {
-      return m_stateHandler.getGeneration();
-    }
+  public void File_loadState(String StateName) {
 
-    @Override
-    public void setSpeedcontrol(int Speed) {
-        m_speed = Speed;
-      
-    }
+    m_stateHandler.setGrid(m_fileHandler.loadState(StateName));
 
-    @Override
-    public int getSpeedcontrol() {
-      return m_speed;
-    }
+  }
 
-    @Override
-    public void setZoomFactor(int ZoomFactor) {
-      m_zoomFactor = ZoomFactor;
-      
-    }
+  public void File_saveState(String StateName) {
+    m_fileHandler.saveState(m_stateHandler.getGrid(), StateName);
+  }
 
-    @Override
-    public int getZoomFactor() {
-        return m_zoomFactor;
-    }
-    
+  public void File_deleteState(String StateName) {
+    m_fileHandler.deleteState(StateName);
+  }
+
+  public String DB_viewStates() {
+      return m_databaseHandler.viewStates();
+  }
+
+  public void DB_loadState(String StateName) {
+      m_stateHandler.setGrid(m_databaseHandler.loadState(StateName));
+  }
+
+  public void DB_saveState(String StateName) {
+      m_databaseHandler.saveState(m_stateHandler.getGrid(), StateName);
+  }
+
+  public void DB_deleteState(String StateName) {
+      m_databaseHandler.deleteState(StateName);
+  }
+
+  public void start() {
+    m_stateHandler.startState();
+  }
+
+  public void stop() {
+    m_stateHandler.stopState();
+  }
+
+  public void reset() {
+    m_stateHandler.resetState();
+  }
+
+  public void next() {
+    m_stateHandler.nextState();
+  }
+
+  public void clear() {
+    m_stateHandler.clearState();
+  }
+
+  public int getGeneration() {
+    return m_stateHandler.getGeneration();
+  }
+
+  public boolean isRunning() {
+    return m_stateHandler.isRunning();
+  }
+
+  public void setStateHandler(StateHandler m_stateHandler) {
+    this.m_stateHandler = m_stateHandler;
+  }
+
+  public void setFileHandler(FileHandler m_fileHandler) {
+    this.m_fileHandler = m_fileHandler;
+  }
 }

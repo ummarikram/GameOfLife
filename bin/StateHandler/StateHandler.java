@@ -19,8 +19,6 @@ public interface StateHandler {
 
    public int getGeneration();
 
-   public void setGeneration(int count);
-
    public Grid getGrid();
 
    public void setGrid(Grid grid);

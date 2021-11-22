@@ -48,35 +48,34 @@ end if;
 END $$
 
 call saveState ('New',1,1,1);
-call saveState ('New',2,1,1);
+call saveState ('New',9,1,1);
 call saveState ('Newtest',2,2,1);
 
--- drop procedure viewState
+--  drop procedure viewState
 
 DELIMITER $$
 use gameoflife $$
 create procedure viewState
 (
-IN GridNamein varchar(50)
+
 )
 begin
 	if exists
 	(
 	select *
 	from Grid
-	where Grid.GridName=GridNamein 
 	)
 		then
 			select *
 			from Grid
-			where Grid.GridName=GridNamein ;
+            order by Grid.GridName,Grid.RowNo,Grid.ColumnNo,Grid.Alive asc;
 	else
-			set @print=("value does not exists with name ", GridName) ;
+			set @print=("values do not exist") ;
 			select @print;
 		end if;
 end;
 
-call viewState('New');
+call viewState;
 
 DELIMITER $$
 use gameoflife $$

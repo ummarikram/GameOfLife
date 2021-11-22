@@ -15,8 +15,6 @@ public interface StateHandler {
 
    public boolean isRunning();
 
-   public void setRunning(boolean running_state);
-
    public int getGeneration();
 
    public Grid getGrid();

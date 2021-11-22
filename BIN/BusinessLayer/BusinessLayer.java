@@ -115,10 +115,6 @@ public class BusinessLayer implements StateHandler {
         return m_isRunning;
     }
 
-    public void setRunning(boolean running_state) {
-        m_isRunning = running_state;
-    }
-
     public int getGeneration() {
         return m_CurrentGeneration;
     }

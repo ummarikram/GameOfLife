@@ -1,7 +1,7 @@
-package bin.Interfaces.GridHandler;
+package bin.Interfaces.GridInterface;
 import bin.BL.Grid.*;
 
-public interface GridHandler {
+public interface GridInterface {
 
     public int getRows();
 

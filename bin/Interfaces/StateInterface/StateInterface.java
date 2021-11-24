@@ -1,6 +1,6 @@
-package bin.Interfaces.StateHandler;
+package bin.Interfaces.StateInterface;
 
-public interface StateHandler {
+public interface StateInterface {
 
    public void startState();
 

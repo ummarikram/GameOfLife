@@ -1,13 +1,13 @@
 package bin.UI.Console;
 
-import bin.Interfaces.GridHandler.*;
-import bin.Interfaces.StateHandler.*; 
-import bin.Interfaces.StorageHandler.*; 
+import bin.Interfaces.GridInterface.*;
+import bin.Interfaces.StateInterface.*;
+import bin.Interfaces.StorageInterface.*;
 import bin.Interfaces.UserInterface.*;
 
 public class Console extends UserInterface {
 
-  public Console(StateHandler stateHandler, GridHandler gridHandler, StorageHandler storageHandler) {
+  public Console(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler) {
     setStateHandler(stateHandler);
     setGridHandler(gridHandler);
     setStorageHandler(storageHandler);

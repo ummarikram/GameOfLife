@@ -1,7 +1,7 @@
-package bin.Interfaces.StorageHandler;
+package bin.Interfaces.StorageInterface;
 import bin.BL.Grid.*;
 
-public interface StorageHandler {
+public interface StorageInterface {
     public String viewStates();
 
     public Grid loadState(String name);

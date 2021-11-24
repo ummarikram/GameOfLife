@@ -1,16 +1,16 @@
 package bin.Interfaces.UserInterface;
 
-import bin.Interfaces.GridHandler.*;
-import bin.Interfaces.StateHandler.*; 
-import bin.Interfaces.StorageHandler.*; 
+import bin.Interfaces.GridInterface.*;
+import bin.Interfaces.StateInterface.*;
+import bin.Interfaces.StorageInterface.*; 
 
 
 public abstract class UserInterface {
 
   // All of these are interfaces
-  private StateHandler m_stateHandler;
-  private GridHandler m_gridHandler;
-  private StorageHandler m_storageHandler;
+  private StateInterface m_stateHandler;
+  private GridInterface m_gridHandler;
+  private StorageInterface m_storageHandler;
 
   public abstract void Display();
 
@@ -111,16 +111,16 @@ public abstract class UserInterface {
     return m_stateHandler.isRunning();
   }
 
-  public void setStateHandler(StateHandler m_stateHandler) {
+  public void setStateHandler(StateInterface m_stateHandler) {
     this.m_stateHandler = m_stateHandler;
   }
 
-  public void setGridHandler(GridHandler m_gridHandler)
+  public void setGridHandler(GridInterface m_gridHandler)
   {
     this.m_gridHandler = m_gridHandler;
   }
 
-  public void setStorageHandler(StorageHandler m_storageHandler)
+  public void setStorageHandler(StorageInterface m_storageHandler)
   {
     this.m_storageHandler = m_storageHandler;
   }

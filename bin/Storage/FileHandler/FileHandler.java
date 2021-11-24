@@ -4,9 +4,9 @@ import java.util.Scanner;
 import java.io.*;
 
 import bin.BL.Grid.*;
-import bin.Interfaces.StorageHandler.*; 
+import bin.Interfaces.StorageInterface.*; 
 
-public class FileHandler implements StorageHandler {
+public class FileHandler implements StorageInterface {
 
     public String viewStates() // show all file names
     {

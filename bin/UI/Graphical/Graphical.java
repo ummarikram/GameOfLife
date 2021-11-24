@@ -1,8 +1,8 @@
 package bin.UI.Graphical;
 
-import bin.Interfaces.GridHandler.*;
-import bin.Interfaces.StateHandler.*; 
-import bin.Interfaces.StorageHandler.*; 
+import bin.Interfaces.GridInterface.*;
+import bin.Interfaces.StateInterface.*;
+import bin.Interfaces.StorageInterface.*;
 import bin.Interfaces.UserInterface.*;
 
 import java.awt.*;
@@ -163,7 +163,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         }
     };
 
-    public Graphical(StateHandler stateHandler, GridHandler gridHandler, StorageHandler storageHandler) {
+    public Graphical(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler) {
 
         setStateHandler(stateHandler);
         setGridHandler(gridHandler);

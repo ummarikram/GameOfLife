@@ -1,10 +1,10 @@
 package bin.BL.LogicLayer;
 
-import bin.Interfaces.StateHandler.*;
-import bin.Interfaces.GridHandler.*;
+import bin.Interfaces.GridInterface.*;
+import bin.Interfaces.StateInterface.*;
 import bin.BL.Grid.*;
 
-public class LogicLayer implements StateHandler, GridHandler {
+public class LogicLayer implements StateInterface, GridInterface {
 
     private Grid m_Grid;
     private Grid m_ResetGrid;

@@ -1,7 +1,7 @@
 package bin.Storage.DatabaseHandler;
 
 import bin.BL.Grid.*;
-import bin.Interfaces.StorageHandler.*; 
+import bin.Interfaces.StorageInterface.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +10,7 @@ import java.util.StringJoiner;
 import javax.sql.StatementEvent;
 import java.sql.*;
 
-public class DatabaseHandler implements StorageHandler {
+public class DatabaseHandler implements StorageInterface {
 
     private String user = "root";
     private String password = "rf9qedae";

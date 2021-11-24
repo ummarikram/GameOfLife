@@ -1,5 +1,5 @@
-package Interfaces.GridHandler;
-import Grid.Grid;
+package bin.Interfaces.GridHandler;
+import bin.BL.Grid.*;
 
 public interface GridHandler {
 

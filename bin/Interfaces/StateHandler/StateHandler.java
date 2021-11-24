@@ -1,4 +1,4 @@
-package Interfaces.StateHandler;
+package bin.Interfaces.StateHandler;
 
 public interface StateHandler {
 

@@ -1,8 +1,8 @@
-package Interfaces.UserInterface;
+package bin.Interfaces.UserInterface;
 
-import Interfaces.GridHandler.*;
-import Interfaces.StateHandler.*; 
-import Interfaces.StorageHandler.*; 
+import bin.Interfaces.GridHandler.*;
+import bin.Interfaces.StateHandler.*; 
+import bin.Interfaces.StorageHandler.*; 
 
 
 public abstract class UserInterface {

@@ -1,5 +1,5 @@
-package Interfaces.StorageHandler;
-import Grid.Grid;
+package bin.Interfaces.StorageHandler;
+import bin.BL.Grid.*;
 
 public interface StorageHandler {
     public String viewStates();

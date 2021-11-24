@@ -1,9 +1,9 @@
-package Graphical;
+package bin.UI.Graphical;
 
-import Interfaces.GridHandler.*;
-import Interfaces.StateHandler.*; 
-import Interfaces.StorageHandler.*; 
-import Interfaces.UserInterface.*;
+import bin.Interfaces.GridHandler.*;
+import bin.Interfaces.StateHandler.*; 
+import bin.Interfaces.StorageHandler.*; 
+import bin.Interfaces.UserInterface.*;
 
 import java.awt.*;
 import javax.swing.*;

@@ -1,9 +1,9 @@
-package Console;
+package bin.UI.Console;
 
-import Interfaces.GridHandler.*;
-import Interfaces.StateHandler.*; 
-import Interfaces.StorageHandler.*; 
-import Interfaces.UserInterface.*;
+import bin.Interfaces.GridHandler.*;
+import bin.Interfaces.StateHandler.*; 
+import bin.Interfaces.StorageHandler.*; 
+import bin.Interfaces.UserInterface.*;
 
 public class Console extends UserInterface {
 

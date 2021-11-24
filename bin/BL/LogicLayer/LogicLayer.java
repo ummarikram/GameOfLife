@@ -1,24 +1,24 @@
-package BusinessLayer;
+package bin.BL.LogicLayer;
 
-import Interfaces.StateHandler.*; 
-import Interfaces.GridHandler.*;
-import Grid.Grid;
+import bin.Interfaces.StateHandler.*;
+import bin.Interfaces.GridHandler.*;
+import bin.BL.Grid.*;
 
-public class BusinessLayer implements StateHandler, GridHandler {
+public class LogicLayer implements StateHandler, GridHandler {
 
     private Grid m_Grid;
     private Grid m_ResetGrid;
     private boolean m_isRunning;
     private int m_CurrentGeneration;
 
-    public BusinessLayer() {
+    public LogicLayer() {
         m_Grid = new Grid();
         m_isRunning = false;
         m_CurrentGeneration = 0;
 
     }
 
-    public BusinessLayer(int rows, int columns) {
+    public LogicLayer(int rows, int columns) {
         m_Grid = new Grid(rows, columns);
         m_isRunning = false;
         m_CurrentGeneration = 0;

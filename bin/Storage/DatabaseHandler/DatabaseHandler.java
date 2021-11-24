@@ -1,7 +1,7 @@
-package DatabaseHandler;
+package bin.Storage.DatabaseHandler;
 
-import Grid.Grid;
-import Interfaces.StorageHandler.*; 
+import bin.BL.Grid.*;
+import bin.Interfaces.StorageHandler.*; 
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,4 +1,4 @@
-package Grid;
+package bin.BL.Grid;
 
 public class Grid {
 

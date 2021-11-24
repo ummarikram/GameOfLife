@@ -1,10 +1,10 @@
-package FileHandler;
+package bin.Storage.FileHandler;
 
 import java.util.Scanner;
 import java.io.*;
 
-import Grid.Grid;
-import Interfaces.StorageHandler.*; 
+import bin.BL.Grid.*;
+import bin.Interfaces.StorageHandler.*; 
 
 public class FileHandler implements StorageHandler {
 

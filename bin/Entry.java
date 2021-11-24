@@ -1,9 +1,10 @@
-import Console.Console;
-import DatabaseHandler.DatabaseHandler;
-import FileHandler.FileHandler;
-import Graphical.Graphical;
-import BusinessLayer.*;
+package bin;
 
+import bin.UI.Console.*;
+import bin.Storage.FileHandler.*;
+import bin.Storage.DatabaseHandler.*;
+import bin.UI.Graphical.*;
+import bin.BL.LogicLayer.*;
 
 
 public class Entry 
@@ -11,7 +12,7 @@ public class Entry
     public static void main(String[] args)
     {   
 
-        BusinessLayer Logic = new BusinessLayer(20,20);
+        LogicLayer Logic = new LogicLayer(20,20);
         
         FileHandler fileHandler = new FileHandler();
         DatabaseHandler databaseHandler = new DatabaseHandler();

@@ -1,67 +1,141 @@
 package DatabaseHandler;
 import Grid.Grid;
 import STORAGE_INTERFACE.STORAGE_INTERFACE;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.StringJoiner;
+
+import javax.sql.StatementEvent;
+
+import java.sql.*;
 
 public class DatabaseHandler implements STORAGE_INTERFACE {
 
-    @Override
-    public String viewStates() {
-        // TODO Auto-generated method stub
+    public String viewStates()
+    {
 
-        String StateNames = "";
-
-        // Query
-
-        // while (rs.next())
-        // {
-        //     StateNames = StateNames + rs.getString(1) + "\n";
-        // }
-
-     
-        return null;
-    }
-
-    @Override
-    public Grid loadState(String name) {
-        // TODO Auto-generated method stub
-        
-        // int rows = 0, cols = 0;
-
-        // select top(1) Grid.row
-        // from Grid
-        // order by desc Grid.row
-
-    //    Grid Temp = new Grid(rows,cols);
-
-        // write query here
-    //    while (rs.next())
-    //    {
-    //        //Temp.setCellState(rs.getInt(2), rs.getInt(3), rs.getBoolan(4));
-    //    }
-        
-        
-        return null;
-    }
-
-    @Override
-    public void saveState(Grid grid, String name) {
-        // TODO Auto-generated method stub
-
-        for (int row = 0; row < grid.getRows(); row++)
+        String output=null;
+        try
         {
-            for (int col = 0; col < grid.getColumns(); col++)
-            {
-                Boolean Alive = grid.getCellState(row, col);
+          
+            String url = "jdbc:mysql://localhost/gameoflife"; //connection string here test is the name of the database
+            Connection con = DriverManager.getConnection(url, "root", "rf9qedae"); // pass the connection string, username and password
+            System.out.println(con);
+            System.out.println("connected");
+            Statement one=con.createStatement();
+            String query="call viewState;";
+            ResultSet rs= one.executeQuery(query);
 
-                // Run query here...
+            int i=0;
+
+            while(rs.next())  
+            {
+                if(i==0)
+                {
+                    output=rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+"\n";  
+                }
+                else
+                {
+                    output=output+rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+"\n";
+                }
+          
+                i++;
             }
-        }
+
+            con.close();
+            
+            
+        } 
+        catch (SQLException e )
+        {
+            System.out.println(e);
+        }  
+        return output;
+    }
+
+    public void loadState(String GridName)
+    {
+     try
+        {
+          
+            String url = "jdbc:mysql://localhost/gameoflife"; //connection string here test is the name of the database
+            Connection con = DriverManager.getConnection(url, "root", "rf9qedae"); // pass the connection string, username and password
+            System.out.println(con);
+            System.out.println("connected");
+            Statement one=con.createStatement();
+            String query="call loadState " + "('"+ GridName +"');";
+            ResultSet rs= one.executeQuery(query);
+
+            while(rs.next())  
+            {
+            System.out.println(rs.getString(1)+"  "+rs.getString(2)+"  "+rs.getString(3)+"  "+rs.getString(4));  
+            
+            }
+            con.close();
+ 
+            
+        } 
+        catch (SQLException e )
+        {
+            System.out.println(e);
+        }  
         
     }
 
-    @Override
-    public void deleteState(String name) {
-        // TODO Auto-generated method stub
+
+    public void saveState(Grid grid,String GridName)
+    {
+        int alive=0;
+        if(bit==true)
+        {
+             alive=1;
+        }
+        else
+        {
+             alive=0;
+        }
+         try
+            {
+              
+                String url = "jdbc:mysql://localhost/gameoflife"; //connection string here test is the name of the database
+                Connection con = DriverManager.getConnection(url, "root", "rf9qedae"); // pass the connection string, username and password
+                System.out.println(con);
+                System.out.println("connected");
+                Statement one=con.createStatement();
+                String query="call saveState " + "('"+ GridName +"',"+RowNo+","+ColNo+","+alive+ ");";
+                one.executeQuery(query);
+    
+                con.close();
+     
+                
+            } 
+            catch (SQLException e )
+            {
+                System.out.println(e);
+            } 
+    }
+
+    public void deleteState(String Gridname)
+    {
+        try
+        {
+          
+            String url = "jdbc:mysql://localhost/gameoflife"; //connection string here test is the name of the database
+            Connection con = DriverManager.getConnection(url, "root", "rf9qedae"); // pass the connection string, username and password
+            System.out.println(con);
+            System.out.println("connected");
+            Statement one=con.createStatement();
+            String query="call deleteState " + "('"+ Gridname +"');";
+            one.executeQuery(query);
+            con.close();
+ 
+            
+        } 
+        catch (SQLException e )
+        {
+            System.out.println(e);
+        }  
         
     }
     

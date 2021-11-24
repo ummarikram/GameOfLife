@@ -154,6 +154,11 @@ public class Graphical extends UserInterface implements ChangeListener {
                 SaveState.setVisible(true);
             }
 
+            else if (e.getSource() == SaveState)
+            {
+                // saveState("StateName");
+            }
+
             for (int i = 0; i < getRows(); i++) {
                 for (int j = 0; j < getColumns(); j++) {
                     m_gridCells[i][j].ChangeState();

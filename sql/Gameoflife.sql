@@ -66,9 +66,9 @@ begin
 	from Grid
 	)
 		then
-			select *
+			select Grid.GridName
 			from Grid
-            order by Grid.GridName,Grid.RowNo,Grid.ColumnNo,Grid.Alive asc;
+            order by Grid.GridName;
 	else
 			set @print=("values do not exist") ;
 			select @print;

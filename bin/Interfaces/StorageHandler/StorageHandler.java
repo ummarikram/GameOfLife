@@ -1,7 +1,7 @@
-package STORAGE_INTERFACE;
+package Interfaces.StorageHandler;
 import Grid.Grid;
 
-public interface STORAGE_INTERFACE {
+public interface StorageHandler {
     public String viewStates();
 
     public Grid loadState(String name);

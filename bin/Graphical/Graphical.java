@@ -1,12 +1,13 @@
 package Graphical;
 
-import UserInterface.*;
-import StateHandler.*;
+import Interfaces.GridHandler.*;
+import Interfaces.StateHandler.*; 
+import Interfaces.StorageHandler.*; 
+import Interfaces.UserInterface.*;
 
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
-
 import java.awt.event.*;
 
 public class Graphical extends UserInterface implements ChangeListener {
@@ -72,6 +73,7 @@ public class Graphical extends UserInterface implements ChangeListener {
 
                 Clear.setVisible(false);
                 Reset.setVisible(true);
+                SaveState.setVisible(true);
 
                 next();
 
@@ -85,6 +87,7 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Clear.setVisible(false);
                 Zoom.setVisible(false);
                 L_Zoom.setVisible(false);
+                SaveState.setVisible(false);
 
                 Stop.setVisible(true);
                 Reset.setVisible(true);
@@ -127,16 +130,16 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Next.setVisible(true);
                 Zoom.setVisible(true);
                 L_Zoom.setVisible(true);
+                SaveState.setVisible(true);
             }
 
             else if (e.getSource() == Clear) {
-
+               
                 clear();
-
             }
 
             else if (e.getSource() == Reset) {
-                
+
                 reset();
 
                 Generation.setText(Integer.toString(getGeneration()));
@@ -148,6 +151,7 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Clear.setVisible(true);
                 Zoom.setVisible(true);
                 L_Zoom.setVisible(true);
+                SaveState.setVisible(true);
             }
 
             for (int i = 0; i < getRows(); i++) {
@@ -159,9 +163,11 @@ public class Graphical extends UserInterface implements ChangeListener {
         }
     };
 
-    public Graphical(StateHandler stateHandler) {
+    public Graphical(StateHandler stateHandler, GridHandler gridHandler, StorageHandler storageHandler) {
 
         setStateHandler(stateHandler);
+        setGridHandler(gridHandler);
+        setStorageHandler(storageHandler);
 
         Frame = new JFrame();
         Generation = new JLabel();
@@ -170,6 +176,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Next = new JButton("NEXT");
         Clear = new JButton("CLEAR");
         Reset = new JButton("RESET");
+        SaveState = new JButton("SAVE STATE");
         Zoom = new JSlider(CellSize, CellSize + 20, CellSize);
         Speed = new JSlider(0, 2000, 500);
         timer = new Timer(Speed.getValue(), m_ActionListner);
@@ -194,6 +201,9 @@ public class Graphical extends UserInterface implements ChangeListener {
         Reset.addActionListener(m_ActionListner);
         Reset.setFocusable(false);
         Reset.setVisible(false);
+
+        SaveState.addActionListener(m_ActionListner);
+        SaveState.setFocusable(false);
 
         Zoom.addChangeListener(this);
         Speed.addChangeListener(this);
@@ -257,6 +267,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Controls.add(Next);
         Controls.add(Reset);
         Controls.add(Clear);
+        Controls.add(SaveState);
 
         Controls.add(Generation);
 

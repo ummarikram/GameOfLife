@@ -1,12 +1,16 @@
 package Console;
 
-import StateHandler.StateHandler;
-import UserInterface.*;
+import Interfaces.GridHandler.*;
+import Interfaces.StateHandler.*; 
+import Interfaces.StorageHandler.*; 
+import Interfaces.UserInterface.*;
 
 public class Console extends UserInterface {
 
-  public Console(StateHandler stateHandler) {
+  public Console(StateHandler stateHandler, GridHandler gridHandler, StorageHandler storageHandler) {
     setStateHandler(stateHandler);
+    setGridHandler(gridHandler);
+    setStorageHandler(storageHandler);
   }
 
   public void cls() {

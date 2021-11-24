@@ -1,4 +1,6 @@
 import Console.Console;
+import DatabaseHandler.DatabaseHandler;
+import FileHandler.FileHandler;
 import Graphical.Graphical;
 import BusinessLayer.*;
 
@@ -11,18 +13,26 @@ public class Entry
 
         BusinessLayer Logic = new BusinessLayer(20,20);
         
-        Graphical GUI = new Graphical(Logic);
+        FileHandler fileHandler = new FileHandler();
+        DatabaseHandler databaseHandler = new DatabaseHandler();
+
+
+        Graphical GUI = new Graphical(Logic, Logic, databaseHandler);
         GUI.Display();
 
-        // Console CUI = new Console(Logic);
+        // Console CUI = new Console(Logic, Logic, fileHandler);
 
-        // CUI.setCellState(5, 10, true);
-        // CUI.setCellState(5, 11, true);
-        // CUI.setCellState(5, 12, true);
-        // CUI.setCellState(4, 11, true);
-        // CUI.setCellState(6, 11, true);
+        // Delete State
+        // CUI.File_deleteState("Test");
 
-        // CUI.StartGameLoop();
+        // Save State
+        // CUI.File_saveState("Test");
+
+        // Load State
+        // CUI.File_loadState("Test");
+ 
+        // View States
+        // System.out.print(CUI.File_viewStates());
     }
 }
 

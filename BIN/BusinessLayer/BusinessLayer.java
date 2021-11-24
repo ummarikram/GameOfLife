@@ -1,9 +1,10 @@
 package BusinessLayer;
 
-import StateHandler.StateHandler;
+import Interfaces.StateHandler.*; 
+import Interfaces.GridHandler.*;
 import Grid.Grid;
 
-public class BusinessLayer implements StateHandler {
+public class BusinessLayer implements StateHandler, GridHandler {
 
     private Grid m_Grid;
     private Grid m_ResetGrid;
@@ -38,6 +39,37 @@ public class BusinessLayer implements StateHandler {
                     m_Grid.calculateCellNeighbours(i, j);
                 }
             }
+        }
+    }
+
+    public int getRows()
+    {
+        return m_Grid.getRows();
+    }
+
+    public int getColumns()
+    {
+        return m_Grid.getColumns();
+    }
+
+    public boolean getCellState(int row, int col)
+    {
+        return m_Grid.getCellState(row, col);
+    }
+
+    public void setCellState(int row, int col, boolean value)
+    {
+        if (row >= 0 && col>= 0)
+        {
+            m_Grid.setCellState(row, col, value);
+        }
+    }
+
+    public void ChangeDimensions(int newRow, int newCol)
+    {
+        if (newRow >= 0 && newCol>= 0)
+        {
+            m_Grid.ChangeDimensions(newRow, newCol);
         }
     }
 

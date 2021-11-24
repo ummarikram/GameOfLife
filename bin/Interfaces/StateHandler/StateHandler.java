@@ -1,5 +1,4 @@
-package StateHandler;
-import Grid.Grid;
+package Interfaces.StateHandler;
 
 public interface StateHandler {
 
@@ -16,8 +15,4 @@ public interface StateHandler {
    public boolean isRunning();
 
    public int getGeneration();
-
-   public Grid getGrid();
-
-   public void setGrid(Grid grid);
 }

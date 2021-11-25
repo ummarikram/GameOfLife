@@ -6,6 +6,7 @@ import bin.Interfaces.StorageInterface.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.StringJoiner;
 import javax.sql.StatementEvent;
 import java.sql.*;
@@ -16,9 +17,9 @@ public class DatabaseHandler implements StorageInterface {
     private String user = "root";
     private String password = "rf9qedae";
 
-    public String viewStates() {
+    public ArrayList<String> viewStates() {
 
-        String output = "";
+        ArrayList<String> output = new ArrayList<String>();
 
         try {
 
@@ -33,8 +34,9 @@ public class DatabaseHandler implements StorageInterface {
 
             // store all statenames inside a string;
             while (rs.next()) {
-                output = output + rs.getString(1) + "\n";
+                output.add(rs.getString(1));
             }
+            
             con.close();
 
         } catch (SQLException e) {

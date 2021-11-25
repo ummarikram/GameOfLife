@@ -1,5 +1,6 @@
 package bin.Storage.FileHandler;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 
@@ -8,19 +9,21 @@ import bin.Interfaces.StorageInterface.*;
 
 public class FileHandler implements StorageInterface {
 
-    public String viewStates() // show all file names
-    {
-        String FileName = "bin/FileHandler/States.txt";
-        String StateNames = "";
+    private String pathAllStates = "bin/Storage/FileHandler/States.txt";
+    private String pathSavedStaes = "bin/Storage/FileHandler/SavedStates/";
 
-        File myFile = new File(FileName);
+    public ArrayList<String> viewStates() // show all file names
+    {
+        ArrayList<String> StateNames = new ArrayList<String>();
+
+        File myFile = new File(pathAllStates);
 
         try {
             Scanner sc = new Scanner(myFile);
 
             while (sc.hasNextLine()) {
                 String State = sc.nextLine();
-                StateNames = StateNames + State + "\n";
+                StateNames.add(State);
             }
 
             sc.close();
@@ -35,7 +38,7 @@ public class FileHandler implements StorageInterface {
     {
         String row;
         String column;
-        String FileName = "bin/FileHandler/SavedStates/" + StateName + ".txt";
+        String FileName = pathSavedStaes + StateName + ".txt";
 
         Grid State = null;
         File myFile = new File(FileName);
@@ -69,7 +72,7 @@ public class FileHandler implements StorageInterface {
 
     public void saveState(Grid grid, String StateName) // WriteFile
     {
-        String FileName = "bin/FileHandler/SavedStates/" + StateName + ".txt";
+        String FileName = pathSavedStaes + StateName + ".txt";
 
         File myfile = new File(FileName);
 
@@ -97,8 +100,7 @@ public class FileHandler implements StorageInterface {
             fileWriter.close();
 
             try {
-                String filename = "bin/FileHandler/States.txt";
-                FileWriter fw = new FileWriter(filename, true); // the true will append the new data
+                FileWriter fw = new FileWriter(pathAllStates, true); // the true will append the new data
                 fw.write(StateName + "\n");// appends the string to the file
                 fw.close();
             } catch (IOException ioe) {
@@ -112,7 +114,7 @@ public class FileHandler implements StorageInterface {
     }
 
     public void deleteState(String StateName) {
-        String FileName = "bin/FileHandler/SavedStates/" + StateName + ".txt";
+        String FileName = pathSavedStaes + StateName + ".txt";
 
         File myfile = new File(FileName);
 
@@ -123,7 +125,7 @@ public class FileHandler implements StorageInterface {
 
             // remove this state from states file
             try {
-                File file = new File("bin/FileHandler/States.txt");
+                File file = new File(pathAllStates);
 
                 File temp = File.createTempFile("file", ".txt", file.getParentFile());
 

@@ -8,13 +8,58 @@ import bin.Interfaces.UserInterface.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
+
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class Graphical extends UserInterface implements ChangeListener {
 
-    public class GridCells extends JButton implements ActionListener {
+    private class AllStates extends JPanel implements ActionListener {
+        private JLabel m_StateName;
+        private JButton m_LoadState;
+        private JButton m_DeleteState;
 
-        int x, y;
+        public AllStates(String StateName) {
+            m_StateName = new JLabel(StateName);
+            m_StateName.setFont(new Font("Consolas", Font.PLAIN, 14));
+            m_StateName.setForeground(Color.WHITE);
+
+            m_LoadState = new JButton("LOAD STATE");
+            m_DeleteState = new JButton("DELETE STATE");
+            m_LoadState.addActionListener(this);
+            m_LoadState.setFocusable(false);
+            m_DeleteState.addActionListener(this);
+            m_DeleteState.setFocusable(false);
+
+            this.add(m_StateName);
+            this.add(m_LoadState);
+            this.add(m_DeleteState);
+
+            this.setBackground(Color.BLACK);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == m_LoadState) {
+                clear();
+                loadState(m_StateName.getText());
+            }
+
+            else if (e.getSource() == m_DeleteState) {
+                deleteState(m_StateName.getText());
+
+                this.removeAll();
+                this.repaint();
+                this.revalidate();
+            }
+
+        }
+
+    }
+
+    private class GridCells extends JButton implements ActionListener {
+
+        private int x, y;
 
         public GridCells(int x, int y) {
 
@@ -62,111 +107,6 @@ public class Graphical extends UserInterface implements ChangeListener {
     JLabel L_Zoom;
 
     int CellSize = 30;
-    Timer timer;
-
-    ActionListener m_ActionListner = new ActionListener() {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            if (e.getSource() == Next) {
-
-                Clear.setVisible(false);
-                Reset.setVisible(true);
-                SaveState.setVisible(true);
-
-                next();
-
-                Generation.setText(Integer.toString(getGeneration()));
-            }
-
-            else if (e.getSource() == Start) {
-
-                Start.setVisible(false);
-                Next.setVisible(false);
-                Clear.setVisible(false);
-                Zoom.setVisible(false);
-                L_Zoom.setVisible(false);
-                SaveState.setVisible(false);
-
-                Stop.setVisible(true);
-                Reset.setVisible(true);
-
-                start();
-
-                Thread GameLoop = new Thread(new Runnable() {
-                    public void run() {
-                        while (isRunning()) {
-                        
-                            next();
-
-                            for (int i = 0; i < getRows(); i++) {
-                                for (int j = 0; j < getColumns(); j++) {
-                                    m_gridCells[i][j].ChangeState();
-                                }
-                            }
-
-                            Generation.setText(Integer.toString(getGeneration()));
-
-                            try {
-                                Thread.sleep(Speed.getValue());
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-
-                GameLoop.start();
-
-            }
-
-            else if (e.getSource() == Stop) {
-
-                stop();
-
-                Stop.setVisible(false);
-                Start.setVisible(true);
-                Next.setVisible(true);
-                Zoom.setVisible(true);
-                L_Zoom.setVisible(true);
-                SaveState.setVisible(true);
-            }
-
-            else if (e.getSource() == Clear) {
-               
-                clear();
-            }
-
-            else if (e.getSource() == Reset) {
-
-                reset();
-
-                Generation.setText(Integer.toString(getGeneration()));
-
-                Reset.setVisible(false);
-                Stop.setVisible(false);
-                Start.setVisible(true);
-                Next.setVisible(true);
-                Clear.setVisible(true);
-                Zoom.setVisible(true);
-                L_Zoom.setVisible(true);
-                SaveState.setVisible(true);
-            }
-
-            else if (e.getSource() == SaveState)
-            {
-                // saveState("StateName");
-            }
-
-            for (int i = 0; i < getRows(); i++) {
-                for (int j = 0; j < getColumns(); j++) {
-                    m_gridCells[i][j].ChangeState();
-                }
-            }
-
-        }
-    };
 
     public Graphical(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler) {
 
@@ -182,9 +122,9 @@ public class Graphical extends UserInterface implements ChangeListener {
         Clear = new JButton("CLEAR");
         Reset = new JButton("RESET");
         SaveState = new JButton("SAVE STATE");
+        ViewStates = new JButton("VIEW STATES");
         Zoom = new JSlider(CellSize, CellSize + 20, CellSize);
         Speed = new JSlider(0, 2000, 500);
-        timer = new Timer(Speed.getValue(), m_ActionListner);
 
         Generation.setText(Integer.toString(getGeneration()));
         Generation.setFont(new Font("Consolas", Font.PLAIN, 20));
@@ -210,6 +150,9 @@ public class Graphical extends UserInterface implements ChangeListener {
         SaveState.addActionListener(m_ActionListner);
         SaveState.setFocusable(false);
 
+        ViewStates.addActionListener(m_ActionListner);
+        ViewStates.setFocusable(false);
+
         Zoom.addChangeListener(this);
         Speed.addChangeListener(this);
 
@@ -225,7 +168,7 @@ public class Graphical extends UserInterface implements ChangeListener {
     }
 
     public void Display() {
-       
+
         JPanel Top = new JPanel();
         JPanel Controls = new JPanel();
         JPanel GridContainer = new JPanel();
@@ -273,10 +216,8 @@ public class Graphical extends UserInterface implements ChangeListener {
         Controls.add(Reset);
         Controls.add(Clear);
         Controls.add(SaveState);
-
+        Controls.add(ViewStates);
         Controls.add(Generation);
-
-        timer.start();
 
         Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Frame.setLayout(new BorderLayout());
@@ -293,7 +234,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
-        ChangeDimensions((int) width / CellSize, (int) height / (CellSize/2));
+        ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 2));
 
         GridPanel.setLayout(new GridLayout(getRows(), getColumns()));
 
@@ -310,20 +251,198 @@ public class Graphical extends UserInterface implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-  
+
         if (e.getSource() == Zoom) {
 
             CellSize = Zoom.getValue();
-
             clear();
-
+            Generation.setText(Integer.toString(getGeneration()));
             GridPanel.removeAll();
-
             this.INIT_GRID();
-
             GridPanel.revalidate();
             GridPanel.repaint();
         }
     }
+
+    ActionListener m_ActionListner = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            if (e.getSource() == Next) {
+
+                Clear.setVisible(false);
+                Reset.setVisible(true);
+                SaveState.setVisible(true);
+
+                next();
+
+                Generation.setText(Integer.toString(getGeneration()));
+            }
+
+            else if (e.getSource() == Start) {
+
+                Start.setVisible(false);
+                Next.setVisible(false);
+                Clear.setVisible(false);
+                Zoom.setVisible(false);
+                L_Zoom.setVisible(false);
+                SaveState.setVisible(false);
+
+                Stop.setVisible(true);
+                Reset.setVisible(true);
+
+                start();
+
+                Thread GameLoop = new Thread(new Runnable() {
+                    public void run() {
+                        while (isRunning()) {
+
+                            next();
+
+                            for (int i = 0; i < getRows(); i++) {
+                                for (int j = 0; j < getColumns(); j++) {
+                                    m_gridCells[i][j].ChangeState();
+                                }
+                            }
+
+                            Generation.setText(Integer.toString(getGeneration()));
+
+                            try {
+                                Thread.sleep(Speed.getValue());
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+                GameLoop.start();
+
+            }
+
+            else if (e.getSource() == Stop) {
+
+                stop();
+
+                Stop.setVisible(false);
+                Start.setVisible(true);
+                Next.setVisible(true);
+                Zoom.setVisible(true);
+                L_Zoom.setVisible(true);
+                SaveState.setVisible(true);
+            }
+
+            else if (e.getSource() == Clear) {
+
+                clear();
+            }
+
+            else if (e.getSource() == Reset) {
+
+                reset();
+
+                Generation.setText(Integer.toString(getGeneration()));
+
+                Reset.setVisible(false);
+                Stop.setVisible(false);
+                Start.setVisible(true);
+                Next.setVisible(true);
+                Clear.setVisible(true);
+                Zoom.setVisible(true);
+                L_Zoom.setVisible(true);
+                SaveState.setVisible(true);
+            }
+
+            else if (e.getSource() == SaveState) {
+                
+                SaveState.setVisible(false);
+
+                JFrame Saving = new JFrame();
+                JButton Submit = new JButton("SUBMIT");
+                JTextField StateName = new JTextField();
+
+                Saving.addWindowListener(new java.awt.event.WindowAdapter() {
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        
+                        SaveState.setVisible(true);
+                    }
+                });
+            
+
+                Submit.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (e.getSource() == Submit) {
+                            String s_StateName = StateName.getText();
+
+                            if (s_StateName.length() > 0) {
+
+                                saveState(s_StateName);
+                                Saving.dispose();
+                            }
+                        }
+
+                    }
+
+                });
+
+                Saving.add(StateName);
+                Saving.add(Submit);
+
+                Saving.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                Saving.setTitle("Enter State Name");
+                Saving.setResizable(false);
+                Saving.setSize(500, 70);
+                Saving.setLocationRelativeTo(null);
+                Saving.setLayout(new GridLayout(1, 2, 5, 5));
+                Saving.setVisible(true);
+
+            }
+
+            else if (e.getSource() == ViewStates) {
+
+                ArrayList<String> AllStates = viewStates();
+
+                if (AllStates.size() > 0) {
+
+                    ViewStates.setVisible(false);
+                    
+                    JFrame State = new JFrame();
+
+                    State.addWindowListener(new java.awt.event.WindowAdapter() {
+                        public void windowClosing(java.awt.event.WindowEvent e) {
+                            
+                            ViewStates.setVisible(true);
+                        }
+                    });
+
+                    AllStates[] View = new AllStates[AllStates.size()];
+
+                    for (int i = 0; i < AllStates.size(); i++) {
+                        String Name = AllStates.get(i);
+                        View[i] = new AllStates(Name);
+                        State.add(View[i]);
+                    }
+
+                    State.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    State.setTitle("VIEW STATES");
+                    State.setResizable(false);
+                    State.setLocationRelativeTo(null);
+                    State.setLayout(new GridLayout(AllStates.size(), 1));
+                    State.pack();
+                    State.setVisible(true);
+                }
+            }
+
+            for (int i = 0; i < getRows(); i++) {
+                for (int j = 0; j < getColumns(); j++) {
+                    m_gridCells[i][j].ChangeState();
+                }
+            }
+
+        }
+    };
 
 }

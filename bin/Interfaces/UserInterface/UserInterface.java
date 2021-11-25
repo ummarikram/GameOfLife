@@ -1,5 +1,7 @@
 package bin.Interfaces.UserInterface;
 
+import java.util.ArrayList;
+
 import bin.Interfaces.GridInterface.*;
 import bin.Interfaces.StateInterface.*;
 import bin.Interfaces.StorageInterface.*; 
@@ -42,7 +44,7 @@ public abstract class UserInterface {
     }
   }
 
-  public String viewStates() {
+  public ArrayList<String> viewStates() {
 
     if (m_storageHandler != null) {
       return m_storageHandler.viewStates();

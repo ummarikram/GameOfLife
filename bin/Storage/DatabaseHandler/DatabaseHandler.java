@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.StringJoiner;
 import javax.sql.StatementEvent;
 import java.sql.*;
+import java.sql.Types;
 
 public class DatabaseHandler implements StorageInterface {
 
@@ -23,16 +24,22 @@ public class DatabaseHandler implements StorageInterface {
 
             String url = "jdbc:mysql://localhost/gameoflife"; // connection string here test is the name of the database
             Connection con = DriverManager.getConnection(url, user, password); // pass the connection string,
-                                                                                   // username and password
+                                                                               // username and password
             System.out.println(con);
             System.out.println("connected");
-            Statement one = con.createStatement();
-            String callViewStates = "call viewState;";
-            ResultSet rs = one.executeQuery(callViewStates);
 
-            // store all statenames inside a string;
-            while (rs.next()) {
-                output = output + rs.getString(1) + "\n";
+            CallableStatement statement = con.prepareCall("{call viewState(?)}");
+            statement.registerOutParameter(1, Types.INTEGER);
+
+            boolean HadResults = statement.execute();
+
+            if (HadResults) {
+                ResultSet rs = statement.getResultSet();
+                // store all statenames inside a string;
+                while (rs.next()) {
+                    output = output + rs.getString(1) + "\n";
+                }
+
             }
 
             con.close();
@@ -47,12 +54,12 @@ public class DatabaseHandler implements StorageInterface {
     public Grid loadState(String GridName) {
 
         Grid grid = null;
-        
+
         try {
 
             String url = "jdbc:mysql://localhost/gameoflife"; // connection string here test is the name of the database
             Connection con = DriverManager.getConnection(url, user, password); // pass the connection string,
-                                                                                   // username and password
+                                                                               // username and password
             System.out.println(con);
             System.out.println("connected");
             Statement one = con.createStatement();
@@ -63,16 +70,14 @@ public class DatabaseHandler implements StorageInterface {
 
             while (getMaxRowCol.next()) {
 
-                if (getMaxRowCol.getInt(2) > row)
-                {
-                    row  = getMaxRowCol.getInt(2);
+                if (getMaxRowCol.getInt(2) > row) {
+                    row = getMaxRowCol.getInt(2);
                 }
 
-                if (getMaxRowCol.getInt(3) > col)
-                {
+                if (getMaxRowCol.getInt(3) > col) {
                     col = getMaxRowCol.getInt(3);
                 }
-               
+
             }
 
             grid = new Grid(row, col);
@@ -82,8 +87,6 @@ public class DatabaseHandler implements StorageInterface {
             while (callLoadState.next()) {
                 grid.setCellState(callLoadState.getInt(2), callLoadState.getInt(3), callLoadState.getBoolean(4));
             }
-
-
 
             con.close();
 
@@ -101,23 +104,18 @@ public class DatabaseHandler implements StorageInterface {
 
             String url = "jdbc:mysql://localhost/gameoflife"; // connection string here test is the name of the database
             Connection con = DriverManager.getConnection(url, user, password); // pass the connection string,
-                                                                                   // username and password
+                                                                               // username and password
             System.out.println(con);
             System.out.println("connected");
             Statement one = con.createStatement();
             String query;
             int alive;
 
-            for (int RowNo =0 ; RowNo < grid.getRows(); RowNo++)
-            {
-                for (int ColNo = 0; ColNo < grid.getColumns(); ColNo++)
-                {
-                    if (grid.getCellState(RowNo, ColNo))
-                    {
+            for (int RowNo = 0; RowNo < grid.getRows(); RowNo++) {
+                for (int ColNo = 0; ColNo < grid.getColumns(); ColNo++) {
+                    if (grid.getCellState(RowNo, ColNo)) {
                         alive = 1;
-                    }
-                    else
-                    {
+                    } else {
                         alive = 0;
                     }
 
@@ -138,7 +136,7 @@ public class DatabaseHandler implements StorageInterface {
 
             String url = "jdbc:mysql://localhost/gameoflife"; // connection string here test is the name of the database
             Connection con = DriverManager.getConnection(url, user, password); // pass the connection string,
-                                                                                   // username and password
+                                                                               // username and password
             System.out.println(con);
             System.out.println("connected");
             Statement one = con.createStatement();

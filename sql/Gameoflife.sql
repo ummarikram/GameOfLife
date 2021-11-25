@@ -20,31 +20,7 @@ IN ColumnNoin int,
 IN Alivein bit
 )
 BEGIN
-if exists
-(
-	select *
-	from Grid
-	where Grid.GridName=GridNamein and Grid.ColumnNO=ColumnNoin and Grid.RowNO=RowNoin
-)
-then 		
-	set @print=concat("value already exists with name ",GridNamein, " row no ", RowNoin);
-	set @print2=concat(" ColumnNo ",ColumnNoin," Alive state ",cast(Alivein as signed) );
-	select @print,@print2 ;
-else
-	insert into Grid(GridName,RowNo,ColumnNo,Alive) values(GridNamein,RowNoin,ColumnNoin,Alivein);
-	if exists
-	(
-	select *
-	from Grid
-	where Grid.GridName=GridNamein and Grid.ColumnNO=ColumnNoin and Grid.RowNO=RowNoin
-	) then
-			set @print3=" value inserted successfully ";
-			select @print3;
-	  else 
-				set @print4=" error while insertion ";
-				select @print4;
-	  end if;
-end if;
+	REPLACE into Grid(GridName,RowNo,ColumnNo,Alive) values(GridNamein,RowNoin,ColumnNoin,Alivein);
 END $$
 
 call saveState ('New',1,1,1);
@@ -57,22 +33,16 @@ DELIMITER $$
 use gameoflife $$
 create procedure viewState
 (
-
+OUT NoOfStates INT
 )
 begin
-	if exists
-	(
-	select *
+
+	set NoOfStates= select count(Grid.GridName) from Grid order by Grid.GridName;
+
+	select Grid.GridName
 	from Grid
-	)
-		then
-			select Grid.GridName
-			from Grid
-            order by Grid.GridName;
-	else
-			set @print=("values do not exist") ;
-			select @print;
-		end if;
+	order by Grid.GridName;
+    
 end;
 
 call viewState;
@@ -81,34 +51,35 @@ DELIMITER $$
 use gameoflife $$
 create procedure loadState
 (
-IN GridNamein varchar(50)
+IN GridNamein varchar(50),
+OUT Result bit
 )
 begin
 	if exists
 	(
-	select *
+	select Grid.RowNO, Grid.ColumnNO, Grid.Alive
 	from Grid
 	where Grid.GridName=GridNamein 
 	)
-		then
-			select *
-			from Grid
-			where Grid.GridName=GridNamein;
+	
+	then
+		set Result=1;
+		select Grid.RowNO, Grid.ColumnNO, Grid.Alive
+		from Grid
+		where Grid.GridName=GridNamein;
 	else
-		set @print=('value does not exists with name ',GridNamein );
+		set Result=0;
 	end if;
 end;
 
 call loadState ('New');
 
-
-
-
 DELIMITER $$
 use gameoflife $$
 create procedure deleteState
 (
-IN GridNamein varchar(50)
+IN GridNamein varchar(50),
+OUT Result bit
 )
 begin
 
@@ -118,23 +89,11 @@ begin
 	from Grid
 	where Grid.GridName=GridNamein 
 	)
-		then
-			delete from Grid where Grid.GridName=GridNamein  ;
-			if exists
-				(
-				select *
-				from Grid
-				where Grid.GridName=GridNamein 
-				)
-				then
-					set @print=('state deletion failed');
-                    select @print;
-			else
-					set @print=('state deleted successfully');
-                    select @print;
-			end if;
+	then
+		set Result=1;
+		delete from Grid where Grid.GridName=GridNamein;
 	else
-		set @print=('value does not exists with name '+ GridName );
+		set Result=0;
 		
 end if;
 end;

@@ -14,26 +14,26 @@ public class Entry
 
         LogicLayer Logic = new LogicLayer(20,20);
         
-        FileHandler fileHandler = new FileHandler();
+        // FileHandler fileHandler = new FileHandler();
         DatabaseHandler databaseHandler = new DatabaseHandler();
 
 
-        Graphical GUI = new Graphical(Logic, Logic, databaseHandler);
-        GUI.Display();
+        // Graphical GUI = new Graphical(Logic, Logic, databaseHandler);
+        // GUI.Display();
 
-        // Console CUI = new Console(Logic, Logic, fileHandler);
+        Console CUI = new Console(Logic, Logic, databaseHandler);
 
         // Delete State
-        // CUI.File_deleteState("Test");
+        CUI.deleteState("Test");
 
         // Save State
-        // CUI.File_saveState("Test");
+        CUI.saveState("Test");
 
         // Load State
-        // CUI.File_loadState("Test");
+        CUI.loadState("Test");
  
         // View States
-        // System.out.print(CUI.File_viewStates());
+        System.out.print(CUI.viewStates());
     }
 }
 

@@ -24,16 +24,21 @@ public class Entry
         Console CUI = new Console(Logic, Logic, databaseHandler);
 
         // Delete State
-        CUI.deleteState("Test");
-
+       //CUI.deleteState("Test");
+       //CUI.deleteState("temp");
         // Save State
-        CUI.saveState("Test");
+        //CUI.setCellState(5, 5, true);
+        //CUI.setCellState(4, 4, true);
+       //CUI.saveState("Test");
 
         // Load State
-        CUI.loadState("Test");
+      //  CUI.loadState("Test");
+      CUI.Display();
+      CUI.loadState("Test");
+      CUI.Display();
  
         // View States
-        System.out.print(CUI.viewStates());
+      // System.out.print(CUI.viewStates());
     }
 }
 

@@ -1,3 +1,4 @@
+
 create database GameOfLife;
 use  Gameoflife;
 CREATE TABLE Grid
@@ -37,8 +38,8 @@ OUT NoOfStates INT
 )
 begin
 
-	set NoOfStates= select count(Grid.GridName) from Grid order by Grid.GridName;
-
+	set @NoOfStates= (select count(Grid.GridName) from Grid order by Grid.GridName);
+		
 	select Grid.GridName
 	from Grid
 	order by Grid.GridName;

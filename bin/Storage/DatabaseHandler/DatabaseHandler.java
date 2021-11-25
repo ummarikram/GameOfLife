@@ -27,21 +27,14 @@ public class DatabaseHandler implements StorageInterface {
                                                                                // username and password
             System.out.println(con);
             System.out.println("connected");
+            Statement one = con.createStatement();
+            String callViewStates = "call viewState;";
+            ResultSet rs = one.executeQuery(callViewStates);
 
-            CallableStatement statement = con.prepareCall("{call viewState(?)}");
-            statement.registerOutParameter(1, Types.INTEGER);
-
-            boolean HadResults = statement.execute();
-
-            if (HadResults) {
-                ResultSet rs = statement.getResultSet();
-                // store all statenames inside a string;
-                while (rs.next()) {
-                    output = output + rs.getString(1) + "\n";
-                }
-
+            // store all statenames inside a string;
+            while (rs.next()) {
+                output = output + rs.getString(1) + "\n";
             }
-
             con.close();
 
         } catch (SQLException e) {
@@ -70,12 +63,12 @@ public class DatabaseHandler implements StorageInterface {
 
             while (getMaxRowCol.next()) {
 
-                if (getMaxRowCol.getInt(2) > row) {
-                    row = getMaxRowCol.getInt(2);
+                if (getMaxRowCol.getInt(1) > row) {
+                    row = getMaxRowCol.getInt(1);
                 }
 
-                if (getMaxRowCol.getInt(3) > col) {
-                    col = getMaxRowCol.getInt(3);
+                if (getMaxRowCol.getInt(2) > col) {
+                    col = getMaxRowCol.getInt(2);
                 }
 
             }
@@ -85,7 +78,7 @@ public class DatabaseHandler implements StorageInterface {
             ResultSet callLoadState = one.executeQuery(query);
 
             while (callLoadState.next()) {
-                grid.setCellState(callLoadState.getInt(2), callLoadState.getInt(3), callLoadState.getBoolean(4));
+                grid.setCellState(callLoadState.getInt(1), callLoadState.getInt(2), callLoadState.getBoolean(3));
             }
 
             con.close();

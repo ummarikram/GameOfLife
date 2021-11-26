@@ -43,7 +43,13 @@ public class Graphical extends UserInterface implements ChangeListener {
             if (e.getSource() == m_LoadState) {
                 clear();
                 Generation.setText(Integer.toString(getGeneration()));
+                
                 loadState(m_StateName.getText());
+                for (int i = 0; i < getRows(); i++) {
+                    for (int j = 0; j < getColumns(); j++) {
+                        m_gridCells[i][j].ChangeState();
+                    }
+                }
             }
 
             else if (e.getSource() == m_DeleteState) {

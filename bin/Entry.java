@@ -15,7 +15,7 @@ public class Entry
         LogicLayer Logic = new LogicLayer(20,20);
         
         FileHandler fileHandler = new FileHandler();
-        // DatabaseHandler databaseHandler = new DatabaseHandler();
+         DatabaseHandler databaseHandler = new DatabaseHandler();
 
 
         Graphical GUI = new Graphical(Logic, Logic, fileHandler);

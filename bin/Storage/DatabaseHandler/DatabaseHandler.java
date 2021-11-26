@@ -63,17 +63,14 @@ public class DatabaseHandler implements StorageInterface {
 
             int row = 0, col = 0;
 
-            while (getMaxRowCol.next()) {
+            getMaxRowCol.next();
 
-                if (getMaxRowCol.getInt(1) > row) {
-                    row = getMaxRowCol.getInt(1);
-                }
+                    row = getMaxRowCol.getInt(4);
+               
 
-                if (getMaxRowCol.getInt(2) > col) {
-                    col = getMaxRowCol.getInt(2);
-                }
+               
+                    col = getMaxRowCol.getInt(5);
 
-            }
 
             grid = new Grid(row, col);
 
@@ -110,12 +107,10 @@ public class DatabaseHandler implements StorageInterface {
                 for (int ColNo = 0; ColNo < grid.getColumns(); ColNo++) {
                     if (grid.getCellState(RowNo, ColNo)) {
                         alive = 1;
-                    } else {
-                        alive = 0;
-                    }
-
-                    query = "call saveState " + "('" + GridName + "'," + RowNo + "," + ColNo + "," + alive + ");";
-                    one.executeQuery(query);
+                        query = "call saveState " + "('" + GridName + "'," + RowNo + "," + ColNo + "," + alive+"," + grid.getRows()+"," + grid.getColumns()+");";
+                      one.executeQuery(query);
+                    } 
+                    
                 }
             }
 

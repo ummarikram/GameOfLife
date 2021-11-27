@@ -45,6 +45,28 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Generation.setText(Integer.toString(getGeneration()));
                 
                 loadState(m_StateName.getText());
+                
+
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                double width = screenSize.getWidth();
+                double height = screenSize.getHeight();
+        
+                CellSize =  (int ) width / getRows();
+
+                clear();
+    
+                GridPanel.removeAll();
+    
+                INIT_GRID();
+    
+                GridPanel.revalidate();
+                GridPanel.repaint();
+
+                loadState(m_StateName.getText());
+                
+
+
+
                 for (int i = 0; i < getRows(); i++) {
                     for (int j = 0; j < getColumns(); j++) {
                         m_gridCells[i][j].ChangeState();

@@ -69,6 +69,10 @@ public class LogicLayer implements StateInterface, GridInterface {
     {
         if (newRow >= 0 && newCol>= 0)
         {
+            m_ResetGrid = null;
+            m_isRunning = false;
+            m_CurrentGeneration = 0;
+            
             m_Grid.ChangeDimensions(newRow, newCol);
         }
     }

@@ -14,12 +14,18 @@ import java.util.ArrayList;
 
 public class Graphical extends UserInterface implements ChangeListener {
 
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    double width = screenSize.getWidth();
+    double height = screenSize.getHeight();
+
     private class AllStates extends JPanel implements ActionListener {
+
         private JLabel m_StateName;
         private JButton m_LoadState;
         private JButton m_DeleteState;
 
         public AllStates(String StateName) {
+
             m_StateName = new JLabel(StateName);
             m_StateName.setFont(new Font("Consolas", Font.PLAIN, 14));
             m_StateName.setForeground(Color.WHITE);
@@ -41,37 +47,17 @@ public class Graphical extends UserInterface implements ChangeListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == m_LoadState) {
-                clear();
-                Generation.setText(Integer.toString(getGeneration()));
-                
+
                 loadState(m_StateName.getText());
-                
 
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                double width = screenSize.getWidth();
-                double height = screenSize.getHeight();
-        
-                CellSize =  (int ) width / getRows();
-
-                clear();
-    
                 GridPanel.removeAll();
-    
+
                 INIT_GRID();
-    
+
                 GridPanel.revalidate();
                 GridPanel.repaint();
 
-                loadState(m_StateName.getText());
-                
-
-
-
-                for (int i = 0; i < getRows(); i++) {
-                    for (int j = 0; j < getColumns(); j++) {
-                        m_gridCells[i][j].ChangeState();
-                    }
-                }
+                Generation.setText(Integer.toString(getGeneration()));
             }
 
             else if (e.getSource() == m_DeleteState) {
@@ -92,10 +78,11 @@ public class Graphical extends UserInterface implements ChangeListener {
 
         public GridCells(int x, int y) {
 
-            this.setBackground(Color.lightGray);
-            this.addActionListener(this);
             this.x = x;
             this.y = y;
+            this.ChangeState();
+            this.addActionListener(this);
+
         }
 
         public void ChangeState() {
@@ -136,7 +123,6 @@ public class Graphical extends UserInterface implements ChangeListener {
     JLabel L_Zoom;
 
     int CellSize = 30;
-    Timer timer;
 
     ActionListener m_ActionListner = new ActionListener() {
 
@@ -147,7 +133,6 @@ public class Graphical extends UserInterface implements ChangeListener {
 
                 Clear.setVisible(false);
                 Reset.setVisible(true);
-                SaveState.setVisible(true);
 
                 next();
             }
@@ -159,7 +144,6 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Clear.setVisible(false);
                 Zoom.setVisible(false);
                 L_Zoom.setVisible(false);
-                SaveState.setVisible(false);
 
                 Stop.setVisible(true);
                 Reset.setVisible(true);
@@ -202,7 +186,6 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Next.setVisible(true);
                 Zoom.setVisible(true);
                 L_Zoom.setVisible(true);
-                SaveState.setVisible(true);
             }
 
             else if (e.getSource() == Clear) {
@@ -221,7 +204,6 @@ public class Graphical extends UserInterface implements ChangeListener {
                 Clear.setVisible(true);
                 Zoom.setVisible(true);
                 L_Zoom.setVisible(true);
-                SaveState.setVisible(true);
             }
 
             else if (e.getSource() == SaveState) {
@@ -234,7 +216,7 @@ public class Graphical extends UserInterface implements ChangeListener {
                 JTextField StateName = new JTextField();
 
                 Saving.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
+                    public void windowClosing(WindowEvent e) {
 
                         SaveState.setVisible(true);
                         ViewStates.setVisible(true);
@@ -242,6 +224,21 @@ public class Graphical extends UserInterface implements ChangeListener {
                         Saving.dispose();
 
                     }
+
+                    public void windowIconified(WindowEvent e) {
+                        SaveState.setVisible(true);
+                        ViewStates.setVisible(true);
+
+                        Saving.dispose();
+                    }
+
+                    public void windowDeactivated(WindowEvent e) {
+                        SaveState.setVisible(true);
+                        ViewStates.setVisible(true);
+
+                        Saving.dispose();
+                    }
+
                 });
 
                 Submit.addActionListener(new ActionListener() {
@@ -256,7 +253,7 @@ public class Graphical extends UserInterface implements ChangeListener {
                                 saveState(s_StateName);
                                 SaveState.setVisible(true);
                                 ViewStates.setVisible(true);
-                                
+
                                 Saving.dispose();
                             }
                         }
@@ -293,7 +290,19 @@ public class Graphical extends UserInterface implements ChangeListener {
 
                             ViewStates.setVisible(true);
                             SaveState.setVisible(true);
+                            State.dispose();
+                        }
 
+                        public void windowIconified(WindowEvent e) {
+                            ViewStates.setVisible(true);
+                            SaveState.setVisible(true);
+                            State.dispose();
+
+                        }
+
+                        public void windowDeactivated(WindowEvent e) {
+                            ViewStates.setVisible(true);
+                            SaveState.setVisible(true);
                             State.dispose();
                         }
                     });
@@ -341,9 +350,8 @@ public class Graphical extends UserInterface implements ChangeListener {
         Reset = new JButton("RESET");
         SaveState = new JButton("SAVE STATE");
         ViewStates = new JButton("VIEW STATES");
-        Zoom = new JSlider(CellSize, CellSize + 20, CellSize);
+        Zoom = new JSlider(CellSize, CellSize + 100, CellSize);
         Speed = new JSlider(0, 2000, 500);
-        timer = new Timer(Speed.getValue(), m_ActionListner);
 
         Generation.setText(Integer.toString(getGeneration()));
         Generation.setFont(new Font("Consolas", Font.PLAIN, 20));
@@ -386,6 +394,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Display();
     }
 
+    @Override
     public void Display() {
 
         JPanel Top = new JPanel();
@@ -410,7 +419,9 @@ public class Graphical extends UserInterface implements ChangeListener {
         Frame.add(GridContainer, BorderLayout.CENTER);
         GridContainer.add(GridPanel, BorderLayout.CENTER);
 
-        this.INIT_GRID();
+        ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 2));
+
+        INIT_GRID();
 
         JLabel L_GameName = new JLabel("JOHN CONWAY'S GAME OF LIFE");
         L_GameName.setFont(new Font("Consolas", Font.PLAIN, 40));
@@ -438,8 +449,6 @@ public class Graphical extends UserInterface implements ChangeListener {
         Controls.add(ViewStates);
         Controls.add(Generation);
 
-        timer.start();
-
         Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Frame.setLayout(new BorderLayout());
         Frame.setTitle("John Conway's Game of Life");
@@ -451,12 +460,6 @@ public class Graphical extends UserInterface implements ChangeListener {
 
     private void INIT_GRID() {
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-
-        ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 2));
-
         GridPanel.setLayout(new GridLayout(getRows(), getColumns()));
 
         m_gridCells = new GridCells[getRows()][getColumns()];
@@ -467,7 +470,6 @@ public class Graphical extends UserInterface implements ChangeListener {
                 GridPanel.add(m_gridCells[i][j]);
             }
         }
-
     }
 
     @Override
@@ -477,14 +479,16 @@ public class Graphical extends UserInterface implements ChangeListener {
 
             CellSize = Zoom.getValue();
 
-            clear();
-
             GridPanel.removeAll();
 
-            this.INIT_GRID();
+            ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 2));
+
+            INIT_GRID();
 
             GridPanel.revalidate();
             GridPanel.repaint();
+
+            Generation.setText(Integer.toString(getGeneration()));
         }
     }
 

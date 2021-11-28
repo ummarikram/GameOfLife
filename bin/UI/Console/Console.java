@@ -23,69 +23,60 @@ public class Console extends UserInterface {
       System.out.println(E);
     }
   }
-public void submenu()
-{
- 
-  while (true) 
-  {
-    
-    Scanner myObj = new Scanner(System.in); // Create a Scanner object
 
+  public void submenu() {
 
-    System.out.print("\n        ------#  Menu #---------- ");
-    System.out.print("\n 1. To Save Current state "); // call save adn input
-    System.out.print("\n 2. to Update Current state "); // set cells
-    System.out.print("\n 3. To continue "); // set cells
-    System.out.print("\n 4. To Retuen main menu "); // set cells
+    while (true) {
 
-    System.out.print("\n Enter # --> ");
+      Scanner myObj = new Scanner(System.in); // Create a Scanner object
 
-   // Scanner myObj3 = new Scanner(System.in); // Create a Scanner object
-    int choice = myObj.nextInt(); // Read user input
+      System.out.print("\n        ------#  Menu #---------- ");
+      System.out.print("\n 1. To Save Current state "); // call save adn input
+      System.out.print("\n 2. To Update Current state "); // set cells
+      System.out.print("\n 3. To Continue Game Loop"); // set cells
+      System.out.print("\n 4. To Return to main menu "); // set cells
 
-    if(choice == 1)
-    {
-      System.out.print(" --> Enter name : ");
-      Scanner myObj1 = new Scanner(System.in); // Create a Scanner object
-      String filena = myObj1.nextLine(); // Read user input
+      System.out.print("\n Enter # --> ");
 
-      saveState(filena);
+      // Scanner myObj3 = new Scanner(System.in); // Create a Scanner object
+      int choice = myObj.nextInt(); // Read user input
 
-    } 
-    else if(choice == 2)
-    {
-      while (true) {
-       
-        System.out.print("\n --> Enter coordinates or -1 to stop\n");
-        System.out.print("\n --> Enter row number : ");
-        int ro = myObj.nextInt(); // Read user input
-        if (ro == -1) {
-          break;
+      if (choice == 1) {
+        System.out.print(" --> Enter name : ");
+        Scanner myObj1 = new Scanner(System.in); // Create a Scanner object
+        String filena = myObj1.nextLine(); // Read user input
+
+        saveState(filena);
+
+      } else if (choice == 2) {
+        while (true) {
+
+          System.out.print("\n --> Enter coordinates or -1 to stop\n");
+          System.out.print("\n --> Enter row number : ");
+          int ro = myObj.nextInt(); // Read user input
+          if (ro == -1) {
+            break;
+          }
+          System.out.print(" --> Enter columns number : ");
+          int co = myObj.nextInt(); // Read user input
+          if (co == -1) {
+            break;
+          }
+          setCellState(ro, co, true);
+
         }
-        System.out.print(" --> Enter columns number : ");
-        int co = myObj.nextInt(); // Read user input
-        if (co == -1) {
-          break;
-        }
-        setCellState(ro, co, true);
+      } else if (choice == 3) {
+        StartGameLoop();
 
+      } else if (choice == 4) {
+        break;
+      } else {
+        continue;
       }
+      choice = 0;
     }
-    else if (choice == 3) {
-      StartGameLoop();
 
-    } 
-    else if (choice == 4) {
-      break;
-    }
-    else
-    {
-      continue;
-    }
-    choice = 0;
   }
-
-} 
 
   // create menu here
   public void Display() {
@@ -102,7 +93,6 @@ public void submenu()
       Scanner myObj = new Scanner(System.in); // Create a Scanner object
       int userName = myObj.nextInt(); // Read user input
 
-
       if (userName == 1) {
         ArrayList<String> arrlist = viewStates();
 
@@ -111,32 +101,33 @@ public void submenu()
           for (int i = 0; i < arrlist.size(); i++) {
             System.out.println(i + 1 + " --> " + arrlist.get(i));
           }
-          
-          System.out.print("\n Enter 0 to Run state or 1 Delete state : ");
+
+          System.out.print("\n Enter 0 to Load state or 1 Delete state : ");
           int saveORdelete = myObj.nextInt(); // Read user input
-        
 
           System.out.print("\n Enter State name : ");
 
           Scanner myObj1 = new Scanner(System.in); // Create a Scanner object
           String s = myObj1.nextLine(); // Read user input
 
-          if(saveORdelete == 0)
-          {
+          if (saveORdelete == 0) {
             loadState(s);
-            
+
             StartGameLoop();
 
             submenu();
-          }
-          else if(saveORdelete == 1)
-          {
+          } else if (saveORdelete == 1) {
             deleteState(s);
             continue;
           }
-        }
-        else {
+        } else {
           System.out.print("\n Sorry. You have no saved states to view. ");
+
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
         }
       } else if (userName == 2) {
 
@@ -165,15 +156,13 @@ public void submenu()
           setCellState(ro, co, true);
 
         }
-        StartGameLoop(); 
+
+        StartGameLoop();
 
         submenu();
-      }
-      else if (userName == 3) {
+      } else if (userName == 3) {
         break;
-      }
-      else
-      {
+      } else {
         continue;
       }
 
@@ -207,15 +196,15 @@ public void submenu()
 
     start();
 
+    Scanner myObj2 = new Scanner(System.in);
+
     Thread GameLoop = new Thread(new Runnable() {
       public void run() {
-
-        Scanner myObj = new Scanner(System.in);
 
         Thread InputGame = new Thread(new Runnable() {
           public void run() {
 
-            if (myObj.hasNext()) {
+            if (myObj2.hasNext()) {
               // int userName = myObj.nextInt(); // Read user input
               stop();
 
@@ -244,6 +233,8 @@ public void submenu()
 
     GameLoop.start();
 
+    while (GameLoop.isAlive())
+      ;
   }
 
 }

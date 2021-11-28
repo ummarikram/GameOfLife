@@ -10,6 +10,10 @@ The game of life is a cellular automation devised by the British mathematician J
 * Any dead cell with three live neighbours becomes a live cell.
 * All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 
+## INSTRUCTIONS
+
+* For using MySQL, you must have a database created the database inside the sql on your local machine. Then change the username and password inside bin/Storage/Databasehandler/DatabaseHandler.java according to your machine.
+
 ## DESIGN
 
 ![Image of Design](https://github.com/ummarikram/GameOfLife/blob/main/design/John%20Conway%E2%80%99s%20Game%20of%20Life%20Design.png)

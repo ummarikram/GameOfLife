@@ -12,7 +12,7 @@ The game of life is a cellular automation devised by the British mathematician J
 
 ## INSTRUCTIONS
 
-* For using MySQL, you must have a database created the database inside the sql on your local machine. Then change the username and password inside bin/Storage/Databasehandler/DatabaseHandler.java according to your machine.
+* For using MySQL, you must create the database inside the "sql" folder on your local machine. Then change the username and password variables inside "bin/Storage/Databasehandler/DatabaseHandler.java" according to your machine.
 
 ## DESIGN
 

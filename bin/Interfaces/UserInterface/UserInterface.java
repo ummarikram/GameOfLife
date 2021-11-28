@@ -16,13 +16,13 @@ public abstract class UserInterface {
 
   public abstract void Display();
 
-  public int getRows() {
+  protected int getRows() {
 
     return m_gridHandler.getRows();
 
   }
 
-  public int getColumns() {
+  protected int getColumns() {
 
     return m_gridHandler.getColumns();
 
@@ -32,19 +32,19 @@ public abstract class UserInterface {
     return m_gridHandler.getCellState(row, col);
   }
 
-  public void ChangeDimensions(int rows, int cols) {
+  protected void ChangeDimensions(int rows, int cols) {
     if (m_gridHandler != null) {
       m_gridHandler.ChangeDimensions(rows, cols);
     }
   }
 
-  public void setCellState(int row, int col, boolean value) {
+  protected void setCellState(int row, int col, boolean value) {
     if (m_gridHandler != null) {
       m_gridHandler.setCellState(row, col, value);
     }
   }
 
-  public ArrayList<String> viewStates() {
+  protected ArrayList<String> viewStates() {
 
     if (m_storageHandler != null) {
       return m_storageHandler.viewStates();
@@ -53,51 +53,51 @@ public abstract class UserInterface {
     return null;
   }
 
-  public void loadState(String StateName) {
+  protected void loadState(String StateName) {
 
     if (m_gridHandler != null && m_storageHandler != null) {
       m_gridHandler.setGrid(m_storageHandler.loadState(StateName));
     }
   }
 
-  public void saveState(String StateName) {
+  protected void saveState(String StateName) {
     if (m_gridHandler != null && m_storageHandler != null) {
       m_storageHandler.saveState(m_gridHandler.getGrid(), StateName);
     }
   }
 
-  public void deleteState(String StateName) {
+  protected void deleteState(String StateName) {
 
     if (m_storageHandler != null) {
       m_storageHandler.deleteState(StateName);
     }
   }
 
-  public void start() {
+  protected void start() {
     if (m_stateHandler != null) {
       m_stateHandler.startState();
     }
   }
 
-  public void stop() {
+  protected void stop() {
     if (m_stateHandler != null) {
       m_stateHandler.stopState();
     }
   }
 
-  public void reset() {
+  protected void reset() {
     if (m_stateHandler != null) {
       m_stateHandler.resetState();
     }
   }
 
-  public void next() {
+  protected void next() {
     if (m_stateHandler != null) {
       m_stateHandler.nextState();
     }
   }
 
-  public void clear() {
+  protected void clear() {
     if (m_stateHandler != null) {
       m_stateHandler.clearState();
     }

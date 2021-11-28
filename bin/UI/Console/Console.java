@@ -16,7 +16,7 @@ public class Console extends UserInterface {
     setStorageHandler(storageHandler);
   }
 
-  public void cls() {
+  private void cls() {
     try {
       new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     } catch (Exception E) {
@@ -24,7 +24,7 @@ public class Console extends UserInterface {
     }
   }
 
-  public void submenu() {
+  private void submenu() {
 
     while (true) {
 
@@ -169,7 +169,7 @@ public class Console extends UserInterface {
     }
   }
 
-  public void PrintGrid() {
+  private void PrintGrid() {
 
     // Display();
     // cls();
@@ -191,7 +191,7 @@ public class Console extends UserInterface {
     System.out.print("\n\n");
   }
 
-  public void StartGameLoop() {
+  private void StartGameLoop() {
     // Create a Scanner object
 
     start();

@@ -8,6 +8,8 @@ import bin.Interfaces.StateInterface.*;
 import bin.Interfaces.StorageInterface.*;
 import bin.Interfaces.UserInterface.*;
 
+import java.io.*;
+
 public class Console extends UserInterface {
 
   public Console(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler) {
@@ -16,7 +18,7 @@ public class Console extends UserInterface {
     setStorageHandler(storageHandler);
   }
 
-  private void cls() {
+  public void cls() {
     try {
       new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     } catch (Exception E) {
@@ -24,118 +26,155 @@ public class Console extends UserInterface {
     }
   }
 
-  private void submenu() {
+  public void submenu() {
 
     while (true) {
+      String choice;
+      Scanner myObj = new Scanner(System.in); // Create a Scanner objectf for string
+      Scanner myObj1 = new Scanner(System.in); // Create a Scanner object for integer
 
-      Scanner myObj = new Scanner(System.in); // Create a Scanner object
-
-      System.out.print("\n        ------#  Menu #---------- ");
+      // choice = myObj.nextLine(); // Read user input
+      // choice = 0;
+      System.out.println("\n        ------#  Menu #---------- ");
       System.out.print("\n 1. To Save Current state "); // call save adn input
-      System.out.print("\n 2. To Update Current state "); // set cells
-      System.out.print("\n 3. To Continue Game Loop"); // set cells
-      System.out.print("\n 4. To Return to main menu "); // set cells
+      System.out.print("\n 2. to Update Current state "); // set cells
+      System.out.print("\n 3. To continue "); // set cells
+      System.out.print("\n 4. To Retuen main menu "); // set cells
 
       System.out.print("\n Enter # --> ");
 
-      // Scanner myObj3 = new Scanner(System.in); // Create a Scanner object
-      int choice = myObj.nextInt(); // Read user input
+      // Scanner myObj = new Scanner(System.in); // Create a Scanner object
+      choice = myObj.nextLine(); // Read user input
 
-      if (choice == 1) {
-        System.out.print(" --> Enter name : ");
-        Scanner myObj1 = new Scanner(System.in); // Create a Scanner object
-        String filena = myObj1.nextLine(); // Read user input
+      if (choice.equals("1")) {
 
+        ArrayList<String> arrlist = viewStates();
+        Boolean check = false;
+        String filena;
+
+        do {
+          System.out.print(" --> Enter name : ");
+          filena = myObj.nextLine(); // Read user input
+          check = false;
+
+          for (int i = 0; i < arrlist.size(); i++) {
+            if (arrlist.get(i).equals(filena)) {
+              check = true;
+              System.out.print(" --> A State of this name already exist    ");
+            }
+          }
+
+        } while (check == true);
+        
         saveState(filena);
 
-      } else if (choice == 2) {
+      } else if (choice.equals("2")) {
         while (true) {
 
           System.out.print("\n --> Enter coordinates or -1 to stop\n");
           System.out.print("\n --> Enter row number : ");
-          int ro = myObj.nextInt(); // Read user input
+          int ro = myObj1.nextInt(); // Read user input
           if (ro == -1) {
             break;
           }
           System.out.print(" --> Enter columns number : ");
-          int co = myObj.nextInt(); // Read user input
+          int co = myObj1.nextInt(); // Read user input
           if (co == -1) {
             break;
           }
           setCellState(ro, co, true);
 
         }
-      } else if (choice == 3) {
+      } else if (choice.equals("3")) {
         StartGameLoop();
 
-      } else if (choice == 4) {
+      } else if (choice.equals("4")) {
         break;
       } else {
-        continue;
       }
-      choice = 0;
     }
 
   }
 
   // create menu here
   public void Display() {
-    while (true) {
-      cls();
 
-      System.out.print("\n        ------#  Menu #---------- ");
+    while (true) {
+
+      final String ANSI_RESET = "\u001B[0m";
+      // Declaring the background color
+      final String ANSI_RED_BACKGROUND = "\u001B[41m";
+
+      cls();
+      System.out.println(ANSI_RED_BACKGROUND + "\n        ------#  Menu #----------        " + ANSI_RESET);
       System.out.print("\n 1. Show saved states ");
       System.out.print("\n 2. Create a new Grid ");
       System.out.print("\n 3. Quit ");
 
       System.out.print("\n Enter # --> ");
 
-      Scanner myObj = new Scanner(System.in); // Create a Scanner object
-      int userName = myObj.nextInt(); // Read user input
+      Scanner myObj = new Scanner(System.in); // Create a Scanner object for strings
+      Scanner myObj1 = new Scanner(System.in); // Create a Scanner object integers
 
-      if (userName == 1) {
+      String userName = myObj.nextLine(); // Read user input
+
+      if (userName.equals("1")) {
         ArrayList<String> arrlist = viewStates();
 
         if (arrlist.size() != 0) {
-          System.out.print("\nList of Saves States. \n");
+          System.out.print("\n-->List of Saves States. \n");
           for (int i = 0; i < arrlist.size(); i++) {
             System.out.println(i + 1 + " --> " + arrlist.get(i));
           }
+          String saveORdelete;
+          do {
 
-          System.out.print("\n Enter 0 to Load state or 1 Delete state : ");
-          int saveORdelete = myObj.nextInt(); // Read user input
+            System.out.print("\n Enter 0 to Run state or 1 Delete state : ");
+            saveORdelete = myObj.nextLine(); // Read user input
 
-          System.out.print("\n Enter State name : ");
+          } while (!saveORdelete.equals("0") && !saveORdelete.equals("1"));
 
-          Scanner myObj1 = new Scanner(System.in); // Create a Scanner object
-          String s = myObj1.nextLine(); // Read user input
+          boolean flag = false;
+          do {
+            System.out.print("\n Enter State name : ");
 
-          if (saveORdelete == 0) {
-            loadState(s);
+            String s = myObj.nextLine(); // Read user input
 
-            StartGameLoop();
+            for (int i = 0; i < arrlist.size(); i++) {
+              if (s.equals(arrlist.get(i))) {
+                flag = true;
+              }
+            }
 
-            submenu();
-          } else if (saveORdelete == 1) {
-            deleteState(s);
-            continue;
-          }
+            if (flag == true) {
+              if (saveORdelete.equals("0")) {
+
+                loadState(s);
+                StartGameLoop();
+                submenu();
+
+              } else if (saveORdelete.equals("1")) {
+
+                deleteState(s);
+
+              }
+            } else if (flag == false) {
+
+              System.out.print("\n Enter valid file name...! ");
+
+            }
+
+          } while (flag == false);
         } else {
           System.out.print("\n Sorry. You have no saved states to view. ");
-
-          try {
-            Thread.sleep(1000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
         }
-      } else if (userName == 2) {
+      } else if (userName.equals("2")) {
 
         System.out.print("\n Enter the size of Grid. ");
         System.out.print("\n --> Enter number of rows : ");
-        int r = myObj.nextInt(); // Read user input
+        int r = myObj1.nextInt(); // Read user input
         System.out.print(" --> Enter number of columns : ");
-        int c = myObj.nextInt(); // Read user input
+        int c = myObj1.nextInt(); // Read user input
 
         ChangeDimensions(r, c);
 
@@ -144,35 +183,31 @@ public class Console extends UserInterface {
 
           System.out.print("\n --> Enter coordinates or -1 to stop\n");
           System.out.print("\n --> Enter row number : ");
-          int ro = myObj.nextInt(); // Read user input
+          int ro = myObj1.nextInt(); // Read user input
           if (ro == -1) {
             break;
           }
           System.out.print(" --> Enter columns number : ");
-          int co = myObj.nextInt(); // Read user input
+          int co = myObj1.nextInt(); // Read user input
           if (co == -1) {
             break;
           }
           setCellState(ro, co, true);
 
         }
-
         StartGameLoop();
 
         submenu();
-      } else if (userName == 3) {
+      } else if (userName.equals("3")) {
         break;
       } else {
-        continue;
+
       }
 
     }
   }
 
-  private void PrintGrid() {
-
-    // Display();
-    // cls();
+  public void PrintGrid() {
 
     for (int i = 0; i < getRows(); i++) {
       for (int j = 0; j < getColumns(); j++) {
@@ -187,25 +222,25 @@ public class Console extends UserInterface {
       System.out.print("\n");
     }
 
-    System.out.print(" Generation : " + getGeneration());
+    // System.out.print(" Generation : " + getGeneration());
     System.out.print("\n\n");
   }
 
-  private void StartGameLoop() {
+  public void StartGameLoop() {
     // Create a Scanner object
 
     start();
 
-    Scanner myObj2 = new Scanner(System.in);
-
     Thread GameLoop = new Thread(new Runnable() {
       public void run() {
+
+        Scanner myObj = new Scanner(System.in);
 
         Thread InputGame = new Thread(new Runnable() {
           public void run() {
 
-            if (myObj2.hasNext()) {
-              // int userName = myObj.nextInt(); // Read user input
+            if (myObj.hasNext()) {
+              String userName = myObj.nextLine(); // Read user input
               stop();
 
             }
@@ -233,8 +268,6 @@ public class Console extends UserInterface {
 
     GameLoop.start();
 
-    while (GameLoop.isAlive())
-      ;
   }
 
 }

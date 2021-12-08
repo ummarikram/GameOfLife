@@ -18,7 +18,51 @@ public class Console extends UserInterface {
     setStorageHandler(storageHandler);
   }
 
-  public void cls() {
+  final String ANSI_RESET = "\u001B[0m";
+  // Define color constants
+  final String TEXT_RESET = "\u001B[0m";
+  final String TEXT_BLACK = "\u001B[30m";
+  final String TEXT_RED = "\u001B[31m";
+  final String TEXT_GREEN = "\u001B[32m";
+  final String TEXT_YELLOW = "\u001B[33m";
+  final String TEXT_BLUE = "\u001B[34m";
+  final String TEXT_PURPLE = "\u001B[35m";
+  final String TEXT_CYAN = "\u001B[36m";
+  final String TEXT_WHITE = "\u001B[37m";
+
+
+  // Bold
+  final String BLACK_BOLD = "\033[1;30m";  // BLACK
+  final String RED_BOLD = "\033[1;31m";    // RED
+  final String GREEN_BOLD = "\033[1;32m";  // GREEN
+  final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
+  final String BLUE_BOLD = "\033[1;34m";   // BLUE
+  final String PURPLE_BOLD = "\033[1;35m"; // PURPLE
+  final String CYAN_BOLD = "\033[1;36m";   // CYAN
+  final String WHITE_BOLD = "\033[1;37m";  // WHITE
+
+  // Underline
+  final String BLACK_UNDERLINED = "\033[4;30m";  // BLACK
+  final String RED_UNDERLINED = "\033[4;31m";    // RED
+  final String GREEN_UNDERLINED = "\033[4;32m";  // GREEN
+  final String YELLOW_UNDERLINED = "\033[4;33m"; // YELLOW
+  final String BLUE_UNDERLINED = "\033[4;34m";   // BLUE
+  final String PURPLE_UNDERLINED = "\033[4;35m"; // PURPLE
+  final String CYAN_UNDERLINED = "\033[4;36m";   // CYAN
+  final String WHITE_UNDERLINED = "\033[4;37m";  // WHITE
+
+  // Background
+  final String BLACK_BACKGROUND = "\033[40m";  // BLACK
+  final String RED_BACKGROUND = "\033[41m";    // RED
+  final String GREEN_BACKGROUND = "\033[42m";  // GREEN
+  final String YELLOW_BACKGROUND = "\033[43m"; // YELLOW
+  final String BLUE_BACKGROUND = "\033[44m";   // BLUE
+  final String PURPLE_BACKGROUND = "\033[45m"; // PURPLE
+  final String CYAN_BACKGROUND = "\033[46m";   // CYAN
+  final String WHITE_BACKGROUND = "\033[47m";  // WHITE
+
+
+  private void cls() {
     try {
       new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     } catch (Exception E) {
@@ -26,24 +70,21 @@ public class Console extends UserInterface {
     }
   }
 
-  public void submenu() {
+  private void submenu() {
 
     while (true) {
       String choice;
       Scanner myObj = new Scanner(System.in); // Create a Scanner objectf for string
       Scanner myObj1 = new Scanner(System.in); // Create a Scanner object for integer
 
-      // choice = myObj.nextLine(); // Read user input
-      // choice = 0;
-      System.out.println("\n        ------#  Menu #---------- ");
-      System.out.print("\n 1. To Save Current state "); // call save adn input
+      System.out.println(ANSI_RESET + RED_BACKGROUND +"\n        ------#  Menu #---------- "+ANSI_RESET);
+      System.out.print(YELLOW_BOLD + "\n 1. To Save Current state "); // call save adn input
       System.out.print("\n 2. to Update Current state "); // set cells
-      System.out.print("\n 3. To continue "); // set cells
-      System.out.print("\n 4. To Retuen main menu "); // set cells
+      System.out.print("\n 3. To Continue "); // set cells
+      System.out.print("\n 4. To Return to main menu "); // set cells
 
       System.out.print("\n Enter # --> ");
 
-      // Scanner myObj = new Scanner(System.in); // Create a Scanner object
       choice = myObj.nextLine(); // Read user input
 
       if (choice.equals("1")) {
@@ -101,15 +142,11 @@ public class Console extends UserInterface {
 
     while (true) {
 
-      final String ANSI_RESET = "\u001B[0m";
-      // Declaring the background color
-      final String ANSI_RED_BACKGROUND = "\u001B[41m";
-
       cls();
-      System.out.println(ANSI_RED_BACKGROUND + "\n        ------#  Menu #----------        " + ANSI_RESET);
-      System.out.print("\n 1. Show saved states ");
-      System.out.print("\n 2. Create a new Grid ");
-      System.out.print("\n 3. Quit ");
+      System.out.println(ANSI_RESET + RED_BACKGROUND + "\n        ------#  Menu #----------        " + ANSI_RESET);
+      System.out.println(YELLOW_BOLD  + "\n 1. Show saved states " );
+      System.out.print(YELLOW_BOLD + " 2. Create a new Grid ");
+      System.out.print(YELLOW_BOLD + "\n 3. Quit ");
 
       System.out.print("\n Enter # --> ");
 
@@ -207,26 +244,25 @@ public class Console extends UserInterface {
     }
   }
 
-  public void PrintGrid() {
+  private void PrintGrid() {
 
     for (int i = 0; i < getRows(); i++) {
       for (int j = 0; j < getColumns(); j++) {
 
         if (getCellState(i, j)) {
-          System.out.print(" + ");
+          System.out.print(GREEN_BOLD+" + "+ANSI_RESET);
         } else {
-          System.out.print(" - ");
+          System.out.print(RED_BOLD + " - "+ANSI_RESET);
         }
       }
 
       System.out.print("\n");
     }
 
-    // System.out.print(" Generation : " + getGeneration());
     System.out.print("\n\n");
   }
 
-  public void StartGameLoop() {
+  private void StartGameLoop() {
     // Create a Scanner object
 
     start();
@@ -240,7 +276,7 @@ public class Console extends UserInterface {
           public void run() {
 
             if (myObj.hasNext()) {
-              String userName = myObj.nextLine(); // Read user input
+            //  String userName = myObj.nextLine(); // Read user input
               stop();
 
             }
@@ -254,7 +290,7 @@ public class Console extends UserInterface {
           PrintGrid();
           next();
 
-          System.out.print("\n Enter any key to stop..! ");
+          System.out.print("\n Enter any character to stop..! ");
 
           try {
             Thread.sleep(1000);

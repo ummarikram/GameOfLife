@@ -419,7 +419,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Frame.add(GridContainer, BorderLayout.CENTER);
         GridContainer.add(GridPanel, BorderLayout.CENTER);
 
-        ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 2));
+        ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 4));
 
         INIT_GRID();
 
@@ -481,7 +481,7 @@ public class Graphical extends UserInterface implements ChangeListener {
 
             GridPanel.removeAll();
 
-            ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 2));
+            ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 4));
 
             INIT_GRID();
 

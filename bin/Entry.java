@@ -19,11 +19,11 @@ public class Entry
         DatabaseHandler databaseHandler = new DatabaseHandler();
 
 
-        // Graphical GUI = new Graphical(Logic, Logic, fileHandler);
-        // GUI.Display();
+        Graphical GUI = new Graphical(Logic, Logic, fileHandler);
+        GUI.Display();
 
-        Console cui = new Console(Logic, Logic, fileHandler);
-        cui.Display();
+       // Console cui = new Console(Logic, Logic, fileHandler);
+      //  cui.Display();
     
     }
 }

@@ -14,7 +14,7 @@ public class LogicLayer implements StateInterface, GridInterface {
     public LogicLayer() {
         m_Grid = new Grid();
         m_isRunning = false;
-        m_CurrentGeneration = 0;
+        m_CurrentGeneration = 0;//counter
 
     }
 
@@ -27,7 +27,7 @@ public class LogicLayer implements StateInterface, GridInterface {
     public Grid getGrid() {
         return m_Grid;
     }
-
+//set all the Cells of grid with their defaults state and neighbours count 
     public void setGrid(Grid grid) {
 
         if (grid != null) {
@@ -76,7 +76,7 @@ public class LogicLayer implements StateInterface, GridInterface {
             m_Grid.ChangeDimensions(newRow, newCol);
         }
     }
-
+//During Start state m_Grid values should be copied to m_ResetGrid
     public void startState() {
 
         m_isRunning = true;
@@ -95,7 +95,7 @@ public class LogicLayer implements StateInterface, GridInterface {
     public void stopState() {
         m_isRunning = false;
     }
-
+//when click on reset button all the main reset Grid should be copied main grid 
     public void resetState() {
 
         if (m_ResetGrid != null) {
@@ -111,7 +111,7 @@ public class LogicLayer implements StateInterface, GridInterface {
             }
         }
     }
-
+//when click on next button all the main grid values should be copied to main reset grid and then apply rules
     public void nextState() {
 
         for (int i = 0; i < m_Grid.getRows(); i++) {
@@ -133,7 +133,7 @@ public class LogicLayer implements StateInterface, GridInterface {
         m_CurrentGeneration++;
         applyrules();
     }
-
+//clear the grid when we click on clear button
     public void clearState() {
         m_ResetGrid = null;
         m_isRunning = false;
@@ -173,6 +173,7 @@ public class LogicLayer implements StateInterface, GridInterface {
                     }
 
                 } else {
+                    //if neighbours count is equal to the 3 the cell should be live 
                     if (m_Grid.getCellNeighbours(i, j) == 3) {
                         dummy.setCellState(i, j, true);
                     } else {
@@ -183,7 +184,7 @@ public class LogicLayer implements StateInterface, GridInterface {
 
         }
 
-        // copy to original
+        // copy to original m_Grid from dummy
         for (int i = 0; i < m_Grid.getRows(); i++) {
             for (int j = 0; j < m_Grid.getColumns(); j++) {
                 m_Grid.setCellState(i, j, dummy.getCellState(i, j));

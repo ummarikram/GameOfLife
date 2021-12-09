@@ -1,3 +1,9 @@
+//implement storageinterface
+//saves state that is all grid in db
+//loads grid from db and returns a grid
+//view saved states in db
+//delete grids  in db
+//.................
 package bin.Storage.DatabaseHandler;
 
 import bin.BL.Grid.*;

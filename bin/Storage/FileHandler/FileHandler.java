@@ -1,3 +1,9 @@
+//Author: Huma Karim
+//This file includes the implementation of saving and retrieving data from txt files. here files can also be deleted 
+//and new files can be created. if a file is created, detail is stored in txt file and its name is stored in state.txt.
+//similarly, if a file is deleted then its name is also deletd from states.txt.
+
+
 package bin.Storage.FileHandler;
 
 import java.util.ArrayList;

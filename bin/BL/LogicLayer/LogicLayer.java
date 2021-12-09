@@ -1,3 +1,10 @@
+
+///////////////////////////////////////////////////////////////////////////
+//AUTHOR:UMER FAROOQ
+//DESCRIPTION:THIS IS FOR LOGIC LAYER CLASS IMPLEMENTATION IN WHICH WE APPLY
+//RULES AS WELL AS START ,STOP,CLEAR AND RESET THE STATES 
+
+//////////////////////////////////////////////////////////////////////////
 package bin.BL.LogicLayer;
 
 import bin.Interfaces.GridInterface.*;

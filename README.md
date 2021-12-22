@@ -24,6 +24,45 @@ The game of life is a cellular automation devised by the British mathematician J
 
 ## FUNCTIONALITIES
 
+### Manually Select/Deselect Cells
+  User can select or deselects cell(s) on grid by clicking on them to create different patterns.
+  
+### Start 
+  User can start the game cycle. It stores the reset/initial state in the database/file and then starts to apply all the rules on the current state     and increments counter after every cycle.
+  
+### Next
+  User can get to the next cycle by applying all the rules on the current state. It also increments counter by 1.
+  
+### Stop
+  User can stop the game loop cycle and counter from incrementing.
+  
+### Reset
+  User can reset the game cycle by loading reset/initial state from database/file to the grid and resetting the counter back to 0.
+
+### Save state
+  User can save the current state on the grid in a database/file using this function.
+
+### Load state
+  User can load any previously saved states from the database/file to the grid.
+
+### Speed control
+  User can control the speed of the game cycle by adding appropriate delay in rendering.
+
+### Grid Zoom
+  User can zoom in/out of the grid by changing individual cell size rendered on the grid.
+
+### Counter/Generation
+  User can use this to keep track of the cycle/generation passed until the initial state.
+
+### View saved states
+  User can see the previously saved states by loading them from the database/file.
+
+### Delete saved states
+  User can delete any previously saved states from the database/file.
+
+### Clear
+  User can clear the grid by removing all selected cells.
+
 ## CONTRIBUTORS
 
 [NAWAL ALI](https://github.com/mnawalali4)

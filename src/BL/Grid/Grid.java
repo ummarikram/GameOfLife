@@ -61,6 +61,11 @@ public class Grid {
         }
     }
 
+    public Cell[][] getCells()
+    {
+        return m_Cells;
+    }
+
     public void setCellState(int row, int col, boolean value) {
         if (row < m_Rows && col < m_Columns) {
             m_Cells[row][col].setAlive(value);

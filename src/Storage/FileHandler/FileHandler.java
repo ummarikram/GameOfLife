@@ -9,17 +9,25 @@ package src.Storage.FileHandler;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.json.simple.JSONObject;
 import src.BL.Grid.*;
+import src.Interfaces.JSONInterface.JSONInterface;
 import src.Interfaces.StorageInterface.*;
 
 import java.io.*; 
 
 public class FileHandler implements StorageInterface {
 
-    private String pathAllStates = "bin/Storage/FileHandler/States.txt";
-    private String pathSavedStaes = "bin/Storage/FileHandler/SavedStates/";
+    private String pathAllStates = "src/Storage/FileHandler/States.txt";
+    private String pathSavedStaes = "src/Storage/FileHandler/SavedStates/";
+    JSONInterface FHParser;
 
-    public ArrayList<String> viewStates() // show all file names
+    public FileHandler(JSONInterface Parser)
+    {
+        FHParser = Parser;
+    }
+
+    public JSONObject viewStates() // show all file names
     {
         ArrayList<String> StateNames = new ArrayList<String>();
 
@@ -38,13 +46,14 @@ public class FileHandler implements StorageInterface {
             e.printStackTrace();
         }
 
-        return StateNames;
+        return FHParser.ArraylistTOjson(StateNames);
     }
 
-    public Grid loadState(String StateName) // ReadFile
+    public JSONObject loadState(JSONObject GridName) // ReadFile
     {
         String row;
         String column;
+        String StateName = (String) GridName.get("StateName");
         String FileName = pathSavedStaes + StateName + ".txt";
 
         Grid State = null;
@@ -73,12 +82,16 @@ public class FileHandler implements StorageInterface {
             e.printStackTrace();
         }
 
-        return State;
+        return FHParser.GridTOJSON(State);
 
     }
 
-    public void saveState(Grid grid, String StateName) // WriteFile
+    public void saveState(JSONObject state) // WriteFile
     {
+
+        Grid grid = (Grid) state.get("Grid");
+        String StateName = (String) state.get("StateName");
+
         String FileName = pathSavedStaes + StateName + ".txt";
 
         File myfile = new File(FileName);
@@ -120,7 +133,10 @@ public class FileHandler implements StorageInterface {
 
     }
 
-    public void deleteState(String StateName) {
+    public void deleteState(JSONObject Name) {
+
+        String StateName = (String) Name.get("StateName");
+
         String FileName = pathSavedStaes + StateName + ".txt";
 
         File myfile = new File(FileName);

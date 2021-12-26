@@ -3,7 +3,10 @@ package src.UI.Console;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.json.simple.JSONObject;
+
 import src.Interfaces.GridInterface.*;
+import src.Interfaces.JSONInterface.JSONInterface;
 import src.Interfaces.StateInterface.*;
 import src.Interfaces.StorageInterface.*;
 import src.Interfaces.UserInterface.*;
@@ -12,10 +15,12 @@ import java.io.*;
 
 public class Console extends UserInterface {
 
-  public Console(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler) {
+  public Console(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler,
+      JSONInterface Parser) {
     setStateHandler(stateHandler);
     setGridHandler(gridHandler);
     setStorageHandler(storageHandler);
+    setJSONParser(Parser);
   }
 
   final String ANSI_RESET = "\u001B[0m";
@@ -30,37 +35,35 @@ public class Console extends UserInterface {
   final String TEXT_CYAN = "\u001B[36m";
   final String TEXT_WHITE = "\u001B[37m";
 
-
   // Bold
-  final String BLACK_BOLD = "\033[1;30m";  // BLACK
-  final String RED_BOLD = "\033[1;31m";    // RED
-  final String GREEN_BOLD = "\033[1;32m";  // GREEN
+  final String BLACK_BOLD = "\033[1;30m"; // BLACK
+  final String RED_BOLD = "\033[1;31m"; // RED
+  final String GREEN_BOLD = "\033[1;32m"; // GREEN
   final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
-  final String BLUE_BOLD = "\033[1;34m";   // BLUE
+  final String BLUE_BOLD = "\033[1;34m"; // BLUE
   final String PURPLE_BOLD = "\033[1;35m"; // PURPLE
-  final String CYAN_BOLD = "\033[1;36m";   // CYAN
-  final String WHITE_BOLD = "\033[1;37m";  // WHITE
+  final String CYAN_BOLD = "\033[1;36m"; // CYAN
+  final String WHITE_BOLD = "\033[1;37m"; // WHITE
 
   // Underline
-  final String BLACK_UNDERLINED = "\033[4;30m";  // BLACK
-  final String RED_UNDERLINED = "\033[4;31m";    // RED
-  final String GREEN_UNDERLINED = "\033[4;32m";  // GREEN
+  final String BLACK_UNDERLINED = "\033[4;30m"; // BLACK
+  final String RED_UNDERLINED = "\033[4;31m"; // RED
+  final String GREEN_UNDERLINED = "\033[4;32m"; // GREEN
   final String YELLOW_UNDERLINED = "\033[4;33m"; // YELLOW
-  final String BLUE_UNDERLINED = "\033[4;34m";   // BLUE
+  final String BLUE_UNDERLINED = "\033[4;34m"; // BLUE
   final String PURPLE_UNDERLINED = "\033[4;35m"; // PURPLE
-  final String CYAN_UNDERLINED = "\033[4;36m";   // CYAN
-  final String WHITE_UNDERLINED = "\033[4;37m";  // WHITE
+  final String CYAN_UNDERLINED = "\033[4;36m"; // CYAN
+  final String WHITE_UNDERLINED = "\033[4;37m"; // WHITE
 
   // Background
-  final String BLACK_BACKGROUND = "\033[40m";  // BLACK
-  final String RED_BACKGROUND = "\033[41m";    // RED
-  final String GREEN_BACKGROUND = "\033[42m";  // GREEN
+  final String BLACK_BACKGROUND = "\033[40m"; // BLACK
+  final String RED_BACKGROUND = "\033[41m"; // RED
+  final String GREEN_BACKGROUND = "\033[42m"; // GREEN
   final String YELLOW_BACKGROUND = "\033[43m"; // YELLOW
-  final String BLUE_BACKGROUND = "\033[44m";   // BLUE
+  final String BLUE_BACKGROUND = "\033[44m"; // BLUE
   final String PURPLE_BACKGROUND = "\033[45m"; // PURPLE
-  final String CYAN_BACKGROUND = "\033[46m";   // CYAN
-  final String WHITE_BACKGROUND = "\033[47m";  // WHITE
-
+  final String CYAN_BACKGROUND = "\033[46m"; // CYAN
+  final String WHITE_BACKGROUND = "\033[47m"; // WHITE
 
   private void cls() {
     try {
@@ -77,7 +80,7 @@ public class Console extends UserInterface {
       Scanner myObj = new Scanner(System.in); // Create a Scanner objectf for string
       Scanner myObj1 = new Scanner(System.in); // Create a Scanner object for integer
 
-      System.out.println(ANSI_RESET + RED_BACKGROUND +"\n        ------#  Menu #---------- "+ANSI_RESET);
+      System.out.println(ANSI_RESET + RED_BACKGROUND + "\n        ------#  Menu #---------- " + ANSI_RESET);
       System.out.print(YELLOW_BOLD + "\n 1. To Save Current state "); // call save adn input
       System.out.print("\n 2. to Update Current state "); // set cells
       System.out.print("\n 3. To Continue "); // set cells
@@ -89,7 +92,7 @@ public class Console extends UserInterface {
 
       if (choice.equals("1")) {
 
-        ArrayList<String> arrlist = viewStates();
+        ArrayList<String> arrlist = m_JSONConverter.JsonTOarrlist(viewStates());
         Boolean check = false;
         String filena;
 
@@ -106,8 +109,8 @@ public class Console extends UserInterface {
           }
 
         } while (check == true);
-        
-        saveState(filena);
+
+        saveState(m_JSONConverter.STRINGTOJSON(filena, filena));
 
       } else if (choice.equals("2")) {
         while (true) {
@@ -123,7 +126,14 @@ public class Console extends UserInterface {
           if (co == -1) {
             break;
           }
-          setCellState(ro, co, true);
+
+          JSONObject CellState = new JSONObject();
+
+          CellState.put("Rows", ro);
+          CellState.put("Columns", co);
+          CellState.put("CellState", true);
+
+          setCellState(CellState);
 
         }
       } else if (choice.equals("3")) {
@@ -144,7 +154,7 @@ public class Console extends UserInterface {
 
       cls();
       System.out.println(ANSI_RESET + RED_BACKGROUND + "\n        ------#  Menu #----------        " + ANSI_RESET);
-      System.out.println(YELLOW_BOLD  + "\n 1. Show saved states " );
+      System.out.println(YELLOW_BOLD + "\n 1. Show saved states ");
       System.out.print(YELLOW_BOLD + " 2. Create a new Grid ");
       System.out.print(YELLOW_BOLD + "\n 3. Quit ");
 
@@ -156,7 +166,7 @@ public class Console extends UserInterface {
       String userName = myObj.nextLine(); // Read user input
 
       if (userName.equals("1")) {
-        ArrayList<String> arrlist = viewStates();
+        ArrayList<String> arrlist = m_JSONConverter.JsonTOarrlist(viewStates());
 
         if (arrlist.size() != 0) {
           System.out.print("\n-->List of Saves States. \n");
@@ -186,13 +196,13 @@ public class Console extends UserInterface {
             if (flag == true) {
               if (saveORdelete.equals("0")) {
 
-                loadState(s);
+                loadState(m_JSONConverter.STRINGTOJSON(s, s));
                 StartGameLoop();
                 submenu();
 
               } else if (saveORdelete.equals("1")) {
 
-                deleteState(s);
+                deleteState(m_JSONConverter.STRINGTOJSON(s, s));
 
               }
             } else if (flag == false) {
@@ -213,7 +223,12 @@ public class Console extends UserInterface {
         System.out.print(" --> Enter number of columns : ");
         int c = myObj1.nextInt(); // Read user input
 
-        ChangeDimensions(r, c);
+        JSONObject NewDim = new JSONObject();
+
+        NewDim.put("Rows", r);
+        NewDim.put("Columns", c);
+
+        ChangeDimensions(NewDim);
 
         while (true) {
           cls();
@@ -229,7 +244,14 @@ public class Console extends UserInterface {
           if (co == -1) {
             break;
           }
-          setCellState(ro, co, true);
+
+          JSONObject CellState = new JSONObject();
+
+          CellState.put("Rows", ro);
+          CellState.put("Columns", co);
+          CellState.put("CellState", true);
+
+          setCellState(CellState);
 
         }
         StartGameLoop();
@@ -246,13 +268,18 @@ public class Console extends UserInterface {
 
   private void PrintGrid() {
 
-    for (int i = 0; i < getRows(); i++) {
-      for (int j = 0; j < getColumns(); j++) {
+    for (int i = 0; i < m_JSONConverter.JSONTOINT(getRows(), "Rows"); i++) {
+      for (int j = 0; j < m_JSONConverter.JSONTOINT(getColumns(), "Columns"); j++) {
 
-        if (getCellState(i, j)) {
-          System.out.print(GREEN_BOLD+" + "+ANSI_RESET);
+        JSONObject Cell = new JSONObject();
+
+        Cell.put("Rows", i);
+        Cell.put("Columns", j);
+
+        if (m_JSONConverter.JSONTOBOOLEAN(getCellState(Cell), "CellState")) {
+          System.out.print(GREEN_BOLD + " + " + ANSI_RESET);
         } else {
-          System.out.print(RED_BOLD + " - "+ANSI_RESET);
+          System.out.print(RED_BOLD + " - " + ANSI_RESET);
         }
       }
 
@@ -276,7 +303,7 @@ public class Console extends UserInterface {
           public void run() {
 
             if (myObj.hasNext()) {
-            //  String userName = myObj.nextLine(); // Read user input
+              // String userName = myObj.nextLine(); // Read user input
               stop();
 
             }
@@ -285,7 +312,7 @@ public class Console extends UserInterface {
 
         InputGame.start();
 
-        while (isRunning()) {
+        while (m_JSONConverter.JSONTOBOOLEAN(isRunning(), "isRunning")) {
           cls();
           PrintGrid();
           next();

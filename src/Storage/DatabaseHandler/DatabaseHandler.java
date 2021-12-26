@@ -11,9 +11,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.StringJoiner;
+import java.util.jar.Attributes.Name;
+
 import javax.sql.StatementEvent;
 
+import org.json.simple.JSONObject;
+
 import src.BL.Grid.*;
+import src.Interfaces.JSONInterface.JSONInterface;
 import src.Interfaces.StorageInterface.*;
 
 import java.sql.*;
@@ -23,8 +28,14 @@ public class DatabaseHandler implements StorageInterface {
 
     private String user = "root";
     private String password = "rf9qedae";
+    JSONInterface DBParser;
 
-    public ArrayList<String> viewStates() {
+    public DatabaseHandler(JSONInterface Parser)
+    {
+        DBParser = Parser;
+    }
+
+    public JSONObject viewStates() {
 
         ArrayList<String> output = new ArrayList<String>();
 
@@ -50,10 +61,10 @@ public class DatabaseHandler implements StorageInterface {
             System.out.println(e);
         }
 
-        return output;
+        return DBParser.ArraylistTOjson(output);
     }
 
-    public Grid loadState(String GridName) {
+    public JSONObject loadState(JSONObject GridName) {
 
         Grid grid = null;
 
@@ -65,7 +76,7 @@ public class DatabaseHandler implements StorageInterface {
             System.out.println(con);
             System.out.println("connected");
             Statement one = con.createStatement();
-            String query = "call loadState " + "('" + GridName + "');";
+            String query = "call loadState " + "('" + DBParser.JSONTOSTRING(GridName, "GridName") + "');";
             ResultSet getMaxRowCol = one.executeQuery(query);
 
             int row = 0, col = 0;
@@ -93,11 +104,14 @@ public class DatabaseHandler implements StorageInterface {
             System.out.println(e);
         }
 
-        return grid;
+        return DBParser.GridTOJSON(grid);
 
     }
 
-    public void saveState(Grid grid, String GridName) {
+    public void saveState(JSONObject state) {
+
+        Grid grid = (Grid) state.get("Grid");
+        String GridName = (String) state.get("StateName");
 
         try {
 
@@ -128,12 +142,12 @@ public class DatabaseHandler implements StorageInterface {
         }
     }
 
-    public void deleteState(String Gridname) {
+    public void deleteState(JSONObject Name) {
         try {
 
             String url = "jdbc:mysql://localhost/gameoflife"; // connection string here test is the name of the database
             Connection con = DriverManager.getConnection(url, user, password); // pass the connection string,
-                                                                               // username and password
+            String Gridname = (String) Name.get("StateName");                                                       // username and password
             System.out.println(con);
             System.out.println("connected");
             Statement one = con.createStatement();

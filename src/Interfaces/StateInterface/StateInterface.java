@@ -1,5 +1,7 @@
 package src.Interfaces.StateInterface;
 
+import org.json.simple.JSONObject;
+
 public interface StateInterface {
 
    public void startState();
@@ -12,7 +14,7 @@ public interface StateInterface {
 
    public void nextState();
 
-   public boolean isRunning();
+   public JSONObject isRunning();
 
-   public int getGeneration();
+   public JSONObject getGeneration();
 }

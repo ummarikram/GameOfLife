@@ -7,11 +7,16 @@
 //////////////////////////////////////////////////////////////////////////
 package src.BL.LogicLayer;
 
+import java.util.ArrayList;
+
+import org.json.simple.JSONObject;
+
 import src.BL.Grid.*;
 import src.Interfaces.GridInterface.*;
+import src.Interfaces.JSONInterface.JSONInterface;
 import src.Interfaces.StateInterface.*;
 
-public class LogicLayer implements StateInterface, GridInterface {
+public class LogicLayer implements StateInterface, GridInterface, JSONInterface {
 
     private Grid m_Grid;
     private Grid m_ResetGrid;
@@ -25,18 +30,14 @@ public class LogicLayer implements StateInterface, GridInterface {
 
     }
 
-    public LogicLayer(int rows, int columns) {
-        m_Grid = new Grid(rows, columns);
-        m_isRunning = false;
-        m_CurrentGeneration = 0;
-    }
-
-    public Grid getGrid() {
-        return m_Grid;
+    public JSONObject getGrid() {
+        return GridTOJSON(m_Grid);
     }
 //set all the Cells of grid with their defaults state and neighbours count 
-    public void setGrid(Grid grid) {
+    public void setGrid(JSONObject JGrid) {
 
+        Grid grid = (Grid) JGrid.get("Grid");
+        
         if (grid != null) {
             m_Grid.ChangeDimensions(grid.getRows(), grid.getColumns());
 
@@ -49,38 +50,38 @@ public class LogicLayer implements StateInterface, GridInterface {
         }
     }
 
-    public int getRows()
+    public JSONObject getRows()
     {
-        return m_Grid.getRows();
+        return INTTOJSON(m_Grid.getRows(), "Rows");
     }
 
-    public int getColumns()
+    public JSONObject getColumns()
     {
-        return m_Grid.getColumns();
+        return INTTOJSON(m_Grid.getColumns(), "Columns");
     }
 
-    public boolean getCellState(int row, int col)
+    public JSONObject getCellState(JSONObject Location)
     {
-        return m_Grid.getCellState(row, col);
+        return BOOLTOJSON(m_Grid.getCellState(JSONTOINT(Location, "Rows"), JSONTOINT(Location, "Columns")), "CellState");
     }
 
-    public void setCellState(int row, int col, boolean value)
+    public void setCellState(JSONObject LocationNValue)
     {
-        if (row >= 0 && col>= 0)
+        if (JSONTOINT(LocationNValue, "Rows") >= 0 && JSONTOINT(LocationNValue, "Columns")>= 0)
         {
-            m_Grid.setCellState(row, col, value);
+            m_Grid.setCellState(JSONTOINT(LocationNValue, "Rows"), JSONTOINT(LocationNValue, "Columns"), JSONTOBOOLEAN(LocationNValue, "CellState"));
         }
     }
 
-    public void ChangeDimensions(int newRow, int newCol)
+    public void ChangeDimensions(JSONObject Dimensions)
     {
-        if (newRow >= 0 && newCol>= 0)
+        if (JSONTOINT(Dimensions, "Rows") >= 0 && JSONTOINT(Dimensions, "Columns")>= 0)
         {
             m_ResetGrid = null;
             m_isRunning = false;
             m_CurrentGeneration = 0;
             
-            m_Grid.ChangeDimensions(newRow, newCol);
+            m_Grid.ChangeDimensions(JSONTOINT(Dimensions, "Rows"), JSONTOINT(Dimensions, "Columns"));
         }
     }
 //During Start state m_Grid values should be copied to m_ResetGrid
@@ -154,12 +155,12 @@ public class LogicLayer implements StateInterface, GridInterface {
         }
     }
 
-    public boolean isRunning() {
-        return m_isRunning;
+    public JSONObject isRunning() {
+        return BOOLTOJSON(m_isRunning, "isRunning");
     }
 
-    public int getGeneration() {
-        return m_CurrentGeneration;
+    public JSONObject getGeneration() {
+        return INTTOJSON(m_CurrentGeneration, "Generation");
     }
 
     private void applyrules() {
@@ -198,5 +199,142 @@ public class LogicLayer implements StateInterface, GridInterface {
             }
         }
     }
+
+    public JSONObject GridTOJSON(Grid grid)
+    {
+        /// Add code here.... e.g. put/add
+        JSONObject Object = new JSONObject();
+
+        Object.put("MaxRows", grid.getRows());
+        Object.put("MaxCols", grid.getColumns());
+
+        for (int row = 0 ; row < grid.getRows(); row++)
+        {
+            for (int col = 0 ; col < grid.getColumns(); col++)
+            {
+                if (grid.getCellState(row, col))
+                {
+                    String Location = row + " " + col;
+                    Object.put(Location, 1);
+                }
+              
+            }
+        }
+
+        return Object;
+    }
+
+    public Grid JSONTOGrid(JSONObject object)
+    {
+        int Rows = (int) object.get("MaxRows");
+
+        int Cols = (int) object.get("MaxCols");
+
+        Grid grid = new Grid(Rows,Cols);
+
+        for (int row = 0 ; row < grid.getRows(); row++)
+        {
+            for (int col = 0 ; col < grid.getColumns(); col++)
+            {
+                String Location = row + " " + col;
+
+                if (object.get(Location) != null)
+                {
+                        grid.setCellState(row, col, true);
+                }
+
+            }
+
+        }
+
+        return grid;
+    }
+
+    public JSONObject STRINGTOJSON (String string, String key )
+    {
+        JSONObject object = new JSONObject();
+      
+        
+            object.put(key,string);
+        
+
+        return object;
+    }
+
+    public String JSONTOSTRING (JSONObject object, String key)
+    {
+     
+        String string=(String) object.get(key);
+        
+        return string;
+    }
+
+    public JSONObject INTTOJSON (int val, String key)
+    {
+        JSONObject obj = new JSONObject();
+        obj.put(key, val);
+        return obj;
+
+    }
+
+    public int JSONTOINT (JSONObject object,String key)
+    {
+        int temp =(int) object.get(key);
+        return temp;
+    }
+
+    public JSONObject BOOLTOJSON (boolean val, String key)
+    {
+        JSONObject obj = new JSONObject();
+        obj.put(key, val);
+        return obj;
+    }
+
+    public boolean JSONTOBOOLEAN (JSONObject object, String key)
+    {
+        boolean bool=(boolean) object.get(key);
+        return bool;
+    }
+
+    public JSONObject ArraylistTOjson(ArrayList<String> arr)
+    {
+        JSONObject object = new JSONObject();
+        
+        for (int i = 0; i < arr.size(); i++) 
+        {
+            object.put(String.valueOf(i), arr.get(i));
+              
+        }
+ 
+        return object;
+    }
+    
+    public ArrayList<String> JsonTOarrlist(JSONObject object)
+    {
+
+        ArrayList<String> arr = new  ArrayList<String>();
+    
+        for (int i = 0; i < object.size(); i++) 
+        {
+           arr.add((String) object.get(String.valueOf(i)));
+        }        
+
+        return arr;
+
+    }
+
+    public  JSONObject concatjson (JSONObject obj1, String obj1key, JSONObject obj2, String obj2key)
+    {
+        
+        JSONObject combined = new JSONObject();
+        combined.put(obj1key, obj1);
+        combined.put(obj2key, obj2);
+
+       // JSONObject newobj= new JSONObject();
+        //newobj.put(newkey, combined);
+
+        return combined;
+    } 
+
 
 }

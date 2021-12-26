@@ -2,7 +2,10 @@ package src.Interfaces.UserInterface;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONObject;
+
 import src.Interfaces.GridInterface.*;
+import src.Interfaces.JSONInterface.JSONInterface;
 import src.Interfaces.StateInterface.*;
 import src.Interfaces.StorageInterface.*; 
 
@@ -13,38 +16,39 @@ public abstract class UserInterface {
   private StateInterface m_stateHandler;
   private GridInterface m_gridHandler;
   private StorageInterface m_storageHandler;
+  protected JSONInterface m_JSONConverter;
 
   public abstract void Display();
 
-  protected int getRows() {
+  protected JSONObject getRows() {
 
     return m_gridHandler.getRows();
 
   }
 
-  protected int getColumns() {
+  protected JSONObject getColumns() {
 
     return m_gridHandler.getColumns();
 
   }
 
-  protected boolean getCellState(int row, int col) {
-    return m_gridHandler.getCellState(row, col);
+  protected JSONObject getCellState(JSONObject RowNCol) {
+    return m_gridHandler.getCellState(RowNCol);
   }
 
-  protected void ChangeDimensions(int rows, int cols) {
+  protected void ChangeDimensions(JSONObject RowNCol) {
     if (m_gridHandler != null) {
-      m_gridHandler.ChangeDimensions(rows, cols);
+      m_gridHandler.ChangeDimensions(RowNCol);
     }
   }
 
-  protected void setCellState(int row, int col, boolean value) {
+  protected void setCellState(JSONObject RowNCol) {
     if (m_gridHandler != null) {
-      m_gridHandler.setCellState(row, col, value);
+      m_gridHandler.setCellState(RowNCol);
     }
   }
 
-  protected ArrayList<String> viewStates() {
+  protected JSONObject viewStates() {
 
     if (m_storageHandler != null) {
       return m_storageHandler.viewStates();
@@ -53,20 +57,21 @@ public abstract class UserInterface {
     return null;
   }
 
-  protected void loadState(String StateName) {
+  protected void loadState(JSONObject StateName) {
 
     if (m_gridHandler != null && m_storageHandler != null) {
       m_gridHandler.setGrid(m_storageHandler.loadState(StateName));
     }
   }
 
-  protected void saveState(String StateName) {
+  protected void saveState(JSONObject StateName) {
     if (m_gridHandler != null && m_storageHandler != null) {
-      m_storageHandler.saveState(m_gridHandler.getGrid(), StateName);
+      JSONObject State = m_JSONConverter.concatjson(StateName, "StateName", m_gridHandler.getGrid(), "Grid");
+      m_storageHandler.saveState(State);
     }
   }
 
-  protected void deleteState(String StateName) {
+  protected void deleteState(JSONObject StateName) {
 
     if (m_storageHandler != null) {
       m_storageHandler.deleteState(StateName);
@@ -103,13 +108,13 @@ public abstract class UserInterface {
     }
   }
 
-  protected int getGeneration() {
+  protected JSONObject getGeneration() {
 
     return m_stateHandler.getGeneration();
 
   }
 
-  protected boolean isRunning() {
+  protected JSONObject isRunning() {
     return m_stateHandler.isRunning();
   }
 
@@ -127,4 +132,8 @@ public abstract class UserInterface {
     this.m_storageHandler = m_storageHandler;
   }
 
+  public void setJSONParser(JSONInterface Parser)
+  {
+    this.m_JSONConverter = Parser;
+  }
 }

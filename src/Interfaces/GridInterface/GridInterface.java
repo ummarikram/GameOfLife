@@ -1,19 +1,19 @@
 package src.Interfaces.GridInterface;
-import src.BL.Grid.*;
+import org.json.simple.JSONObject;
 
 public interface GridInterface {
 
-    public int getRows();
+    public JSONObject getRows();
 
-    public int getColumns();
+    public JSONObject getColumns();
 
-    public boolean getCellState(int row, int col);
+    public JSONObject getCellState(JSONObject Location);
 
-    public void setCellState(int row, int col, boolean value);
+    public void setCellState(JSONObject LocationNValue);
 
-    public void ChangeDimensions(int newRow, int newCol);
+    public void ChangeDimensions(JSONObject Dimensions);
 
-    public void setGrid(Grid grid);
+    public void setGrid(JSONObject grid);
 
-    public Grid getGrid();
+    public JSONObject getGrid();
 }

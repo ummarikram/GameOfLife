@@ -4,7 +4,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import org.json.simple.JSONObject;
+
 import src.Interfaces.GridInterface.*;
+import src.Interfaces.JSONInterface.JSONInterface;
 import src.Interfaces.StateInterface.*;
 import src.Interfaces.StorageInterface.*;
 import src.Interfaces.UserInterface.*;
@@ -48,7 +51,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == m_LoadState) {
 
-                loadState(m_StateName.getText());
+                loadState(m_JSONConverter.STRINGTOJSON(m_StateName.getText(), m_StateName.getText()));
 
                 GridPanel.removeAll();
 
@@ -57,11 +60,11 @@ public class Graphical extends UserInterface implements ChangeListener {
                 GridPanel.revalidate();
                 GridPanel.repaint();
 
-                Generation.setText(Integer.toString(getGeneration()));
+                Generation.setText(Integer.toString(m_JSONConverter.JSONTOINT(getGeneration(), "Generation")));
             }
 
             else if (e.getSource() == m_DeleteState) {
-                deleteState(m_StateName.getText());
+                deleteState(m_JSONConverter.STRINGTOJSON(m_StateName.getText(), m_StateName.getText()));
 
                 this.removeAll();
                 this.repaint();
@@ -86,7 +89,13 @@ public class Graphical extends UserInterface implements ChangeListener {
         }
 
         public void ChangeState() {
-            if (getCellState(x, y)) {
+
+            JSONObject Cell = new JSONObject();
+
+            Cell.put("Rows", x);
+            Cell.put("Columns", y);
+
+            if (m_JSONConverter.JSONTOBOOLEAN(getCellState(Cell), "CellState")) {
                 this.setBackground(Color.yellow);
             } else {
                 this.setBackground(Color.lightGray);
@@ -98,14 +107,24 @@ public class Graphical extends UserInterface implements ChangeListener {
             if (e.getSource() == this) {
 
                 if (!this.getModel().isPressed()) {
+                    JSONObject CellState = new JSONObject();
+
+                    CellState.put("Rows", this.x);
+                    CellState.put("Columns", this.y);
 
                     if (this.getBackground() == Color.yellow) {
                         this.setBackground(Color.lightGray);
-                        setCellState(this.x, this.y, false);
+
+                        CellState.put("CellState", false);
+
+                        setCellState(CellState);
 
                     } else {
                         this.setBackground(Color.yellow);
-                        setCellState(this.x, this.y, true);
+
+                        CellState.put("CellState", true);
+
+                        setCellState(CellState);
                     }
 
                 }
@@ -152,17 +171,18 @@ public class Graphical extends UserInterface implements ChangeListener {
 
                 Thread GameLoop = new Thread(new Runnable() {
                     public void run() {
-                        while (isRunning()) {
+                        while (m_JSONConverter.JSONTOBOOLEAN(isRunning(), "isRunning")) {
 
                             next();
 
-                            for (int i = 0; i < getRows(); i++) {
-                                for (int j = 0; j < getColumns(); j++) {
+                            for (int i = 0; i < m_JSONConverter.JSONTOINT(getRows(), "Rows"); i++) {
+                                for (int j = 0; j < m_JSONConverter.JSONTOINT(getColumns(), "Columns"); j++) {
                                     m_gridCells[i][j].ChangeState();
                                 }
                             }
 
-                            Generation.setText(Integer.toString(getGeneration()));
+                            Generation.setText(
+                                    Integer.toString(m_JSONConverter.JSONTOINT(getGeneration(), "Generation")));
 
                             try {
                                 Thread.sleep(Speed.getValue());
@@ -250,7 +270,7 @@ public class Graphical extends UserInterface implements ChangeListener {
 
                             if (s_StateName.length() > 0) {
 
-                                saveState(s_StateName);
+                                saveState(m_JSONConverter.STRINGTOJSON(s_StateName, s_StateName));
                                 SaveState.setVisible(true);
                                 ViewStates.setVisible(true);
 
@@ -276,7 +296,7 @@ public class Graphical extends UserInterface implements ChangeListener {
 
             else if (e.getSource() == ViewStates) {
 
-                ArrayList<String> AllStates = viewStates();
+                ArrayList<String> AllStates = m_JSONConverter.JsonTOarrlist(viewStates());
 
                 if (AllStates.size() > 0) {
 
@@ -324,10 +344,10 @@ public class Graphical extends UserInterface implements ChangeListener {
                 }
             }
 
-            Generation.setText(Integer.toString(getGeneration()));
+            Generation.setText(Integer.toString(m_JSONConverter.JSONTOINT(getGeneration(), "Generation")));
 
-            for (int i = 0; i < getRows(); i++) {
-                for (int j = 0; j < getColumns(); j++) {
+            for (int i = 0; i < m_JSONConverter.JSONTOINT(getRows(), "Rows"); i++) {
+                for (int j = 0; j < m_JSONConverter.JSONTOINT(getColumns(), "Columns"); j++) {
                     m_gridCells[i][j].ChangeState();
                 }
             }
@@ -335,11 +355,13 @@ public class Graphical extends UserInterface implements ChangeListener {
         }
     };
 
-    public Graphical(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler) {
+    public Graphical(StateInterface stateHandler, GridInterface gridHandler, StorageInterface storageHandler,
+            JSONInterface Parser) {
 
         setStateHandler(stateHandler);
         setGridHandler(gridHandler);
         setStorageHandler(storageHandler);
+        setJSONParser(Parser);
 
         Frame = new JFrame();
         Generation = new JLabel();
@@ -353,7 +375,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         Zoom = new JSlider(CellSize, CellSize + 100, CellSize);
         Speed = new JSlider(0, 2000, 500);
 
-        Generation.setText(Integer.toString(getGeneration()));
+        Generation.setText(Integer.toString(m_JSONConverter.JSONTOINT(getGeneration(), "Generation")));
         Generation.setFont(new Font("Consolas", Font.PLAIN, 20));
         Generation.setForeground(Color.WHITE);
 
@@ -419,7 +441,12 @@ public class Graphical extends UserInterface implements ChangeListener {
         Frame.add(GridContainer, BorderLayout.CENTER);
         GridContainer.add(GridPanel, BorderLayout.CENTER);
 
-        ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 4));
+        JSONObject NewDim = new JSONObject();
+
+        NewDim.put("Rows", (int) width / CellSize);
+        NewDim.put("Columns", (int) height / (CellSize / 4));
+
+        ChangeDimensions(NewDim);
 
         INIT_GRID();
 
@@ -460,12 +487,14 @@ public class Graphical extends UserInterface implements ChangeListener {
 
     private void INIT_GRID() {
 
-        GridPanel.setLayout(new GridLayout(getRows(), getColumns()));
+        GridPanel.setLayout(new GridLayout(m_JSONConverter.JSONTOINT(getRows(), "Rows"),
+                m_JSONConverter.JSONTOINT(getColumns(), "Columns")));
 
-        m_gridCells = new GridCells[getRows()][getColumns()];
+        m_gridCells = new GridCells[m_JSONConverter.JSONTOINT(getRows(), "Rows")][m_JSONConverter
+                .JSONTOINT(getColumns(), "Columns")];
 
-        for (int i = 0; i < getRows(); i++) {
-            for (int j = 0; j < getColumns(); j++) {
+        for (int i = 0; i < m_JSONConverter.JSONTOINT(getRows(), "Rows"); i++) {
+            for (int j = 0; j < m_JSONConverter.JSONTOINT(getColumns(), "Columns"); j++) {
                 m_gridCells[i][j] = new GridCells(i, j);
                 GridPanel.add(m_gridCells[i][j]);
             }
@@ -481,14 +510,19 @@ public class Graphical extends UserInterface implements ChangeListener {
 
             GridPanel.removeAll();
 
-            ChangeDimensions((int) width / CellSize, (int) height / (CellSize / 4));
+            JSONObject NewDim = new JSONObject();
+
+            NewDim.put("Rows", (int) width / CellSize);
+            NewDim.put("Columns", (int) height / (CellSize / 4));
+
+            ChangeDimensions(NewDim);
 
             INIT_GRID();
 
             GridPanel.revalidate();
             GridPanel.repaint();
 
-            Generation.setText(Integer.toString(getGeneration()));
+            Generation.setText(Integer.toString(m_JSONConverter.JSONTOINT(getGeneration(), "Generation")));
         }
     }
 

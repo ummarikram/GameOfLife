@@ -1,14 +1,14 @@
 package src.Interfaces.StorageInterface;
-import java.util.ArrayList;
 
-import src.BL.Grid.*;
+import org.json.simple.JSONObject;
 
 public interface StorageInterface {
-    public ArrayList<String> viewStates();
 
-    public Grid loadState(String name);
+    public JSONObject viewStates();
 
-    public void saveState(Grid grid, String name);
+    public JSONObject loadState(JSONObject name);
 
-    public void deleteState(String name);
+    public void saveState(JSONObject state);
+
+    public void deleteState(JSONObject name);
 }

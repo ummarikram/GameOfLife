@@ -16,8 +16,8 @@ import java.io.*;
 
 public class FileHandler implements StorageInterface {
 
-    private String pathAllStates = "bin/Storage/FileHandler/States.txt";
-    private String pathSavedStaes = "bin/Storage/FileHandler/SavedStates/";
+    private String pathAllStates = "src/Storage/FileHandler/States.txt";
+    private String pathSavedStaes = "src/Storage/FileHandler/SavedStates/";
 
     public ArrayList<String> viewStates() // show all file names
     {

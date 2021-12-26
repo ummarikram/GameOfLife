@@ -30,8 +30,7 @@ public class DatabaseHandler implements StorageInterface {
     private String password = "rf9qedae";
     JSONInterface DBParser;
 
-    public DatabaseHandler(JSONInterface Parser)
-    {
+    public DatabaseHandler(JSONInterface Parser) {
         DBParser = Parser;
     }
 
@@ -54,7 +53,7 @@ public class DatabaseHandler implements StorageInterface {
             while (rs.next()) {
                 output.add(rs.getString(1));
             }
-            
+
             con.close();
 
         } catch (SQLException e) {
@@ -76,19 +75,17 @@ public class DatabaseHandler implements StorageInterface {
             System.out.println(con);
             System.out.println("connected");
             Statement one = con.createStatement();
-            String query = "call loadState " + "('" + DBParser.JSONTOSTRING(GridName, "GridName") + "');";
+            String StateName = (String) GridName.get("StateName");
+            String query = "call loadState " + "('" + StateName + "');";
             ResultSet getMaxRowCol = one.executeQuery(query);
 
             int row = 0, col = 0;
 
             getMaxRowCol.next();
 
-                    row = getMaxRowCol.getInt(4);
-               
+            row = getMaxRowCol.getInt(4);
 
-               
-                    col = getMaxRowCol.getInt(5);
-
+            col = getMaxRowCol.getInt(5);
 
             grid = new Grid(row, col);
 
@@ -110,7 +107,9 @@ public class DatabaseHandler implements StorageInterface {
 
     public void saveState(JSONObject state) {
 
-        String GridName = (String) state.get("StateName");
+        JSONObject JStateName = (JSONObject) state.get("StateName");
+
+        String StateName = (String) JStateName.get("StateName");
 
         try {
 
@@ -134,13 +133,13 @@ public class DatabaseHandler implements StorageInterface {
 
                     String Location = RowNo + " " + ColNo;
 
-                    if (JGrid.get(Location) != null)
-                    {
+                    if (JGrid.get(Location) != null) {
                         alive = 1;
-                        query = "call saveState " + "('" + GridName + "'," + RowNo + "," + ColNo + "," + alive+"," + rows+"," + columns+");";
-                      one.executeQuery(query);
-                    } 
-                    
+                        query = "call saveState " + "('" + StateName + "'," + RowNo + "," + ColNo + "," + alive + ","
+                                + rows + "," + columns + ");";
+                        one.executeQuery(query);
+                    }
+
                 }
             }
 
@@ -156,7 +155,7 @@ public class DatabaseHandler implements StorageInterface {
 
             String url = "jdbc:mysql://localhost/gameoflife"; // connection string here test is the name of the database
             Connection con = DriverManager.getConnection(url, user, password); // pass the connection string,
-            String Gridname = (String) Name.get("StateName");                                                       // username and password
+            String Gridname = (String) Name.get("StateName"); // username and password
             System.out.println(con);
             System.out.println("connected");
             Statement one = con.createStatement();

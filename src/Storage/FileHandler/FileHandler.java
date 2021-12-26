@@ -3,7 +3,6 @@
 //and new files can be created. if a file is created, detail is stored in txt file and its name is stored in state.txt.
 //similarly, if a file is deleted then its name is also deletd from states.txt.
 
-
 package src.Storage.FileHandler;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import src.BL.Grid.*;
 import src.Interfaces.JSONInterface.JSONInterface;
 import src.Interfaces.StorageInterface.*;
 
-import java.io.*; 
+import java.io.*;
 
 public class FileHandler implements StorageInterface {
 
@@ -22,8 +21,7 @@ public class FileHandler implements StorageInterface {
     private String pathSavedStaes = "src/Storage/FileHandler/SavedStates/";
     JSONInterface FHParser;
 
-    public FileHandler(JSONInterface Parser)
-    {
+    public FileHandler(JSONInterface Parser) {
         FHParser = Parser;
     }
 
@@ -53,6 +51,7 @@ public class FileHandler implements StorageInterface {
     {
         String row;
         String column;
+        
         String StateName = (String) GridName.get("StateName");
         String FileName = pathSavedStaes + StateName + ".txt";
 
@@ -66,7 +65,7 @@ public class FileHandler implements StorageInterface {
             column = sc.next();
 
             State = new Grid(Integer.parseInt(row), Integer.parseInt(column));
-           
+
             while (sc.hasNextLine()) {
                 row = sc.next();
 
@@ -89,8 +88,9 @@ public class FileHandler implements StorageInterface {
     public void saveState(JSONObject state) // WriteFile
     {
 
-        Grid grid = (Grid) state.get("Grid");
-        String StateName = (String) state.get("StateName");
+        JSONObject JStateName = (JSONObject) state.get("StateName");
+
+        String StateName = (String) JStateName.get("StateName");
 
         String FileName = pathSavedStaes + StateName + ".txt";
 
@@ -105,15 +105,26 @@ public class FileHandler implements StorageInterface {
             e.printStackTrace();
         }
         try {
+
+            JSONObject JGrid = (JSONObject) state.get("Grid");
+
+            int rows = (int) JGrid.get("MaxRows");
+
+            int columns = (int) JGrid.get("MaxCols");
+
             FileWriter fileWriter = new FileWriter(FileName);
 
-            fileWriter.write(grid.getRows() + " " + grid.getColumns()); // write gide row and column size
+            fileWriter.write(rows + " " + columns); // write gide row and column size
 
-            for (int i = 0; i < grid.getRows(); i++) {
-                for (int j = 0; j < grid.getColumns(); j++) {
-                    if (grid.getCellState(i, j) == true) { 
-                        fileWriter.write("\n" + i + " " + j);    
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
+
+                    String Location = i + " " + j;
+
+                    if (JGrid.get(Location) != null) {
+                        fileWriter.write("\n" + i + " " + j);
                     }
+                    
                 }
             }
 
@@ -141,7 +152,6 @@ public class FileHandler implements StorageInterface {
 
         File myfile = new File(FileName);
 
-
         // delete from saved states folder
         if (myfile.delete()) {
             System.out.println("I have deleted: " + myfile.getName());
@@ -159,9 +169,8 @@ public class FileHandler implements StorageInterface {
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(temp), charset));
 
                 for (String line; (line = reader.readLine()) != null;) {
-                    
-                    if (!line.equals(StateName))
-                    {
+
+                    if (!line.equals(StateName)) {
                         writer.println(line);
                     }
                 }
@@ -173,7 +182,7 @@ public class FileHandler implements StorageInterface {
                 temp.renameTo(file);
 
             } catch (IOException e) {
-               
+
                 e.printStackTrace();
             }
 

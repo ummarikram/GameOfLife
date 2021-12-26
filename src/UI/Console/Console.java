@@ -110,7 +110,7 @@ public class Console extends UserInterface {
 
         } while (check == true);
 
-        saveState(m_JSONConverter.STRINGTOJSON(filena, filena));
+        saveState(m_JSONConverter.STRINGTOJSON(filena, "StateName"));
 
       } else if (choice.equals("2")) {
         while (true) {
@@ -196,13 +196,13 @@ public class Console extends UserInterface {
             if (flag == true) {
               if (saveORdelete.equals("0")) {
 
-                loadState(m_JSONConverter.STRINGTOJSON(s, s));
+                loadState(m_JSONConverter.STRINGTOJSON(s, "StateName"));
                 StartGameLoop();
                 submenu();
 
               } else if (saveORdelete.equals("1")) {
 
-                deleteState(m_JSONConverter.STRINGTOJSON(s, s));
+                deleteState(m_JSONConverter.STRINGTOJSON(s, "StateName"));
 
               }
             } else if (flag == false) {
@@ -276,7 +276,7 @@ public class Console extends UserInterface {
         Cell.put("Rows", i);
         Cell.put("Columns", j);
 
-        if (m_JSONConverter.JSONTOBOOLEAN(getCellState(Cell), "CellState")) {
+        if ((boolean) getCellState(Cell).get("CellState")) {
           System.out.print(GREEN_BOLD + " + " + ANSI_RESET);
         } else {
           System.out.print(RED_BOLD + " - " + ANSI_RESET);

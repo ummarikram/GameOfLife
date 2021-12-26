@@ -36,14 +36,19 @@ public class LogicLayer implements StateInterface, GridInterface, JSONInterface 
 //set all the Cells of grid with their defaults state and neighbours count 
     public void setGrid(JSONObject JGrid) {
 
-        Grid grid = (Grid) JGrid.get("Grid");
-        
-        if (grid != null) {
-            m_Grid.ChangeDimensions(grid.getRows(), grid.getColumns());
+        if (JGrid != null) {
+            m_Grid.ChangeDimensions(JSONTOINT(JGrid, "MaxRows") , JSONTOINT(JGrid, "MaxCols"));
 
-            for (int i = 0; i < grid.getRows(); i++) {
-                for (int j = 0; j < grid.getColumns(); j++) {
-                    m_Grid.setCellState(i, j, grid.getCellState(i, j));
+            for (int i = 0; i < JSONTOINT(JGrid, "MaxRows"); i++) {
+                for (int j = 0; j < JSONTOINT(JGrid, "MaxCols"); j++) {
+
+                    String Location = i + " " + j;
+
+                    if (JGrid.get(Location) != null)
+                    {
+                        m_Grid.setCellState(i, j, true);
+                    }
+                   
                     m_Grid.calculateCellNeighbours(i, j);
                 }
             }

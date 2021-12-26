@@ -51,7 +51,7 @@ public class Graphical extends UserInterface implements ChangeListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == m_LoadState) {
 
-                loadState(m_JSONConverter.STRINGTOJSON(m_StateName.getText(), m_StateName.getText()));
+                loadState(m_JSONConverter.STRINGTOJSON(m_StateName.getText(), "StateName"));
 
                 GridPanel.removeAll();
 
@@ -64,7 +64,7 @@ public class Graphical extends UserInterface implements ChangeListener {
             }
 
             else if (e.getSource() == m_DeleteState) {
-                deleteState(m_JSONConverter.STRINGTOJSON(m_StateName.getText(), m_StateName.getText()));
+                deleteState(m_JSONConverter.STRINGTOJSON(m_StateName.getText(), "StateName"));
 
                 this.removeAll();
                 this.repaint();
@@ -95,7 +95,7 @@ public class Graphical extends UserInterface implements ChangeListener {
             Cell.put("Rows", x);
             Cell.put("Columns", y);
 
-            if (m_JSONConverter.JSONTOBOOLEAN(getCellState(Cell), "CellState")) {
+            if ((boolean) getCellState(Cell).get("CellState")) {
                 this.setBackground(Color.yellow);
             } else {
                 this.setBackground(Color.lightGray);
@@ -270,7 +270,7 @@ public class Graphical extends UserInterface implements ChangeListener {
 
                             if (s_StateName.length() > 0) {
 
-                                saveState(m_JSONConverter.STRINGTOJSON(s_StateName, s_StateName));
+                                saveState(m_JSONConverter.STRINGTOJSON(s_StateName, "StateName"));
                                 SaveState.setVisible(true);
                                 ViewStates.setVisible(true);
 

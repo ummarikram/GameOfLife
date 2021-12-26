@@ -110,7 +110,6 @@ public class DatabaseHandler implements StorageInterface {
 
     public void saveState(JSONObject state) {
 
-        Grid grid = (Grid) state.get("Grid");
         String GridName = (String) state.get("StateName");
 
         try {
@@ -124,11 +123,21 @@ public class DatabaseHandler implements StorageInterface {
             String query;
             int alive;
 
-            for (int RowNo = 0; RowNo < grid.getRows(); RowNo++) {
-                for (int ColNo = 0; ColNo < grid.getColumns(); ColNo++) {
-                    if (grid.getCellState(RowNo, ColNo)) {
+            JSONObject JGrid = (JSONObject) state.get("Grid");
+
+            int rows = (int) JGrid.get("MaxRows");
+
+            int columns = (int) JGrid.get("MaxCols");
+
+            for (int RowNo = 0; RowNo < rows; RowNo++) {
+                for (int ColNo = 0; ColNo < columns; ColNo++) {
+
+                    String Location = RowNo + " " + ColNo;
+
+                    if (JGrid.get(Location) != null)
+                    {
                         alive = 1;
-                        query = "call saveState " + "('" + GridName + "'," + RowNo + "," + ColNo + "," + alive+"," + grid.getRows()+"," + grid.getColumns()+");";
+                        query = "call saveState " + "('" + GridName + "'," + RowNo + "," + ColNo + "," + alive+"," + rows+"," + columns+");";
                       one.executeQuery(query);
                     } 
                     

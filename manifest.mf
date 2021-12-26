@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-path: BL.jar CUI.jar DB.jar FH.jar mysql-connector-java-8.0.27.jar GUI.jar
+Main-Class: Entry
+
+

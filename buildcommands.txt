@@ -1,0 +1,5 @@
+javac -cp BL.jar;CUI.jar;DB.jar;FH.jar;mysql-connector-java-8.0.27.jar Entry.java
+
+jar cmf manifest.mf cdb.jar Entry.class Entry.java
+
+java -jar cdb.jar

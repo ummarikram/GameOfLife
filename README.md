@@ -16,10 +16,10 @@ The game of life is a cellular automation devised by the British mathematician J
 
 ## DESIGN
 
-![Image of Design](https://github.com/ummarikram/GameOfLife/blob/main/design/John%20Conway%E2%80%99s%20Game%20of%20Life%20Design.png)
+![Image of Design](https://raw.githubusercontent.com/ummarikram/GameOfLife/main/design/John%20Conway%E2%80%99s%20Game%20of%20Life%20Design.png)
 
 
-![Image of UML](https://github.com/ummarikram/GameOfLife/blob/main/design/UML%20class.jpg)
+![Image of UML](https://raw.githubusercontent.com/ummarikram/GameOfLife/main/design/UML%20class.jpg)
 
 
 ## FUNCTIONALITIES
